@@ -1,0 +1,118 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage[margin=0.75in]{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\setlength{\columnsep}{1cm}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\usepackage[usenames]{color}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{light-gray}{gray}{0.45}
+\titleformat{\section}
+{\color{black}\normalfont\huge\bfseries}
+{\color{black}\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\color{light-gray}\normalfont\Large\bfseries}
+{\color{light-gray}\thesubsection}{1em}{}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{\Huge{\bf Assignment 2: Camera}}
+\author{Comp175: Introduction to Computer Graphics -- Spring 2016}
+\date{Algorithm due:  {\bf Wednesday Feb 24th} at 11:59pm\\
+Project due:  {\bf Wednesday March 2nd} at 11:59pm}                            
+% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+\section{Introduction}								
+When rendering a three-dimensional scene, you need to go through several stages. One of the first steps is to take the objects you have in the scene and break them into triangles. You did that in Assignment 1. The next step is to place those triangles in their proper position in the scene. Not all objects will be at the ``standard'' object position, and you need some way of resizing, moving, and orienting them so that they are where they belong. There remains but one important step: to define how the triangulated objects in the three-dimensional scene are displayed on the two-dimensional screen. This is accomplished through the use of a camera transformation, a matrix that you apply to a point in three-dimensional space to find its projection on a two-dimensional plane. While it is possible to position everything in the scene so that all the camera matrix needs to do is flatten the scene, the camera transformation usually incorporates handling where the camera is located and how it is oriented as well.\\\\
+Now it is entirely possible to simply throw together a camera matrix which you can use as your all-purpose transformation for any three-dimensional scene you may wish to view. All that you would have to do is make sure you position your objects such that they fall within the standard view volume. But this is tedious and inflexible. What happens if you create a scene, and decide that you want to look at it from a slightly different angle or position? You would have to go through and reposition everything to fit your generic camera transformation. Do this often enough and before long you would really wish you had decided to become a sailing instructor instead of coming to Tufts and studying computer science.\\\\
+For this assignment, you will be writing an object that provides all the methods for almost all the adjustments that one could perform on a camera. The camera represents a perspective transformation. It will be your job to implement the functionality behind those methods. Once that has been completed, you will possess all the tools needed to handle displaying three-dimensional objects oriented in any way and viewed from any position.
+%\subsection{Applets}
+%The Brown Exploratories Project has created applets for visualizing the perspective and parallel transformations. They are available at the following location:\\\\
+%\url{http://www.cs.brown.edu/exploratories/freeSoftware/}\\
+
+%Ensure that you have configured your browser to run the appropriate Java plugin (including Java3D support), otherwise, the applets probably won't work (try them first; if they don't work, see the Exploratories website for help).
+
+\subsection{Demo}
+As usual, we have implemented the functionality you are required to implement in this assignment.
+
+The sliders control the following:
+\begin{itemize}
+\item RotateU, RotateV, RotateW refer to controlling the camera's roll, pitch, and yaw (think of the orientation of how you would hold a camera).
+\item The view angle (Angle) of the camera
+\item The position of the camera (EyeX, EyeY, EyeZ)
+\item The look vector of the camera (LookX, LookY, LookZ)
+\item The near clip plane and far clipping plane
+\end{itemize}
+
+Note that the rest of the program (and the code) is built upon your Assignment 1.
+
+\section{Requirements}
+\subsection{Linear Algebra}
+Your camera package depends heavily on linear algebra. In the past, students implemented an entire linear algebra package from scratch in this assignment! However, we believe you have better things to do than writing vector addition functions in C++. Therefore, we are giving most of that code to you (see Algebra.h). %(This code can be found in the math folder in the support code)
+%There are a few methods in here you still need to write. Notably, these are:
+%\begin{enumerate}
+%\item Transformation matrix generators {\tt (CS123Matrix.cpp)}
+%\item Vector reflection
+%\item Vector refraction
+%\end{enumerate}
+
+%You won't be using reflection or refraction until the Ray assignment. However, you'll be using your transformation matrix generators extensively in this assignment. For the purposes of this assignment, you need only fill in the methods in {\tt CS123Matrix.cpp} in the math folder. The methods you need to fill in are marked with a {\tt @TODO: [CAMTRANS]} comment.
+%Use the {\tt REAL} type to represent a float or a double. Do not hard-code float and double because you might want to change them later\footnote{In Intersect and Ray, you may find that floating point precision is not enough in certain situations.}. The {\tt REAL} type is defined in {\tt CS123Algebra.h}.
+
+\subsection{Testing your Linear Algebra}
+Before you implement your Camera, you should test your transformation matrix generators. We leave it up to you to determine how to do this. Either way, make sure that you are comfortable and familiar with the Algebra.H file. You will be using it extensively. Note that the methods implemented in Algebra.H are not necessarily optimal. If you have a faster method, feel free to use it (e.g. for inverting a matrix).
+%Document your testing plan in your {\tt readme} file and be sure to turn in your test cases. You can assume that the code we give you is correct (you don't have to write tests for it)\footnote{If you find a mathematical error in the TA code and you are the first to tell us about it, we will give you extra credit.}.
+
+%As an example, static method with a bunch of asserts would be sufficient. You may choose to call your test code from main.cpp so that your tests are run each time you start your program. Please do not write your test cases directly in {\tt main.cpp}; they should be easy to turn on and off.
+%Hint: Finding errors with your linear algebra now will save you lots of time and frustration later, because it can be nearly impossible to debug your math based solely on the visual result.
+
+\subsection{Camera}
+You will need to write a {\tt Camera.cpp} and a {\tt Camera.h} file. Your camera must support:
+%Look for the comments that say {\tt// @TODO: [CAMTRANS] Fill this in...} and fill in the corresponding methods. Inline comments and Doxygen comments explain what you need to do for each method. Your camera must support:
+\begin{itemize}
+\item Maintaining a matrix that implements the perspective transformation
+\item Setting the camera's absolute position and orientation given an eye point, look vector, and up vector
+\item Setting the camera's view (height) angle and aspect ratio (aspect ratio is determined through setting the screen's width and height).
+\item Translating the camera in world space
+\item Rotating the camera about one of the axes in its own virtual coordinate system
+\item Setting the near and far clipping planes
+\item Having the ability to, at any point, spit out the current eye point, look vector, up vector, view (height) angle, aspect ratio (screen width ratio), and the perspective and model view matrices.
+\end{itemize}
+
+Finally, while not all the functions are called explicitly in the program, you are still required to fill in all all the empty functions.
+
+\subsection{ModelView and Projection Matrices}
+OpenGL requires two separate transformation matrices to place objects in their correct locations. The first, the {\tt modelview} matrix, positions and orients your camera relative to the scene\footnote{Or, if you prefer, orients the world relative to your camera.}. The second, the {\tt projection} matrix, is responsible for projecting the world onto the film plane so it can be displayed on your screen. In {\tt Camera}, this is your responsibility. You must be able to provide the correct {\tt projection} and {\tt modelview} matrices when your {\tt GetProjectionMatrix} or {\tt GetModelviewMatrix} functions are called from main.
+% (these are also marked with {\tt TODO} comments and can be found in {\tt CamtransCamera.cpp}).
+
+
+\section{How to Submit}					
+Complete the algorithm portion of this assignment with your teammate. You may use a calculator or computer algebra system. All your answers should be given in simplest form. When a numerical answer is required, provide a reduced fraction (i.e. 1/3) or at least three decimal places (i.e. 0.333).  Show all work.
+
+%Complete the algorithm portion of this assignment by yourself without any help from anyone or anything except a current Comp175 TA, the lecture notes, official textbook, and the professor. You may use a calculator or computer algebra system. All your answers should be given in simplest form. When a numerical answer is required, provide a reduced fraction (i.e. 1/3) or at least three decimal places (i.e. 0.333).  Show all work.
+
+For the project portion of this assignment, you are encouraged to discuss your strategies with your classmates. However, all team must turn in ORIGINAL WORK, and any collaboration or references outside of your team must be cited appropriately in the header of your submission.
+
+Hand in the assignment using the following commands:
+\begin{itemize}
+\item Algorithm:  \ \ \ \ \ \ {\tt provide comp175 a2-alg}
+\item Project code: \ \ \ {\tt provide comp175 a2}
+\end{itemize}
+
+%Recall from the syllabus that you have two homework passes to use during this semester. Each pass will grant you a penalty-free 72 hour extension, and you may not use more than one pass on a single assignment. Because solutions will be made available for each assignment 72 hours after the due date, no submissions will be accepted more than 72 hours late. Extenuating circumstances may be evaluated on a case-by-case basis by the instructor with documentation by the dean.
+
+\section{Extra Credit}
+For extra credit, you can try implementing a different type of camera, such as an orthographic camera. The camera itself isn't hard to do, but it could require some work in terms of the GUI...
+
+\end{document}  
