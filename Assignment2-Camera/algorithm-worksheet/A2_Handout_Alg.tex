@@ -8,10 +8,13 @@
 \usepackage{amssymb}
 \usepackage{epstopdf}
 \usepackage{fullpage}
+\usepackage{amsmath}
 \usepackage[usenames]{color}
 \usepackage{titlesec}
 \usepackage{hyperref}
 \usepackage{framed}
+
+\renewcommand{\deg}{^\circ}
 
 \definecolor{light-gray}{gray}{0.45}
 \titleformat{\section}
@@ -36,13 +39,13 @@ Project due:  {\bf Wednesday March 2nd} at 11:59pm}
 %\subsection{}
 
 \begin{verbatim}
-Your Names: _____________________________
+Your Names: ________Matt Asnes___________
 
-            _____________________________
+            ________Fury Sheron__________
 
-Your CS Logins: _________________________
+Your CS Logins: ______masnes01___________
 
-                _________________________
+                ______lshero01___________
 \end{verbatim}
 
 \section{Instructions}
@@ -65,7 +68,68 @@ Each of these functions returns the rotation matrix about the $x$, $y$, or $z$ a
 \end{framed}
 
 \begin{framed}
-\vspace{20em}
+Rotation about $x$ via {\tt Matrix rotX\_mat}:
+\[ \begin{bmatrix}
+    \cos(45\deg) & -\sin(45\deg) & 0 & 0 \\
+    \sin(45\deg) &  \cos(45\deg) & 0 & 0 \\
+               0 &             0 & 1 & 0 \\
+               0 &             0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+    1 \\
+    1 \\
+    1 \\
+    1
+\end{bmatrix}
+=
+\begin{bmatrix}
+    0 \\
+    1 \\
+    1 \\
+    1
+\end{bmatrix}\]
+
+Rotation about $y$ via {\tt Matrix rotY\_mat}:
+\[ \begin{bmatrix}
+    \cos(45\deg)  & 0 & \sin(45\deg) & 0 \\
+               0  & 1 &            0 & 0 \\
+    -\sin(45\deg) & 0 & \cos(45\deg) & 0 \\
+               0  & 0 &            0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+    1 \\
+    1 \\
+    1 \\
+    1
+\end{bmatrix}
+=
+\begin{bmatrix}
+    1 \\
+    1 \\
+    0 \\
+    1
+\end{bmatrix}\]
+
+Rotation about $z$ via {\tt Matrix rotZ\_mat}:
+\[ \begin{bmatrix}
+    1 &            0 &             0 & 0 \\
+    0 & \cos(45\deg) & -\sin(45\deg) & 0 \\
+    0 & \sin(45\deg) &  \cos(45\deg) & 0 \\
+               0 &             0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+    1 \\
+    1 \\
+    1 \\
+    1
+\end{bmatrix}
+=
+\begin{bmatrix}
+    1 \\
+    0 \\
+    1 \\
+    1
+\end{bmatrix}\]
 \end{framed}
 
 \section{Arbitrary Rotation}
@@ -81,7 +145,12 @@ where $M_1$ rotates the arbitrary axis about the $y$ axis, $M_2$ rotates the arb
 \end{framed}
 
 \begin{framed}
-\vspace{20em}
+\[M_1 = \mathtt{rotY\_mat}\Big(-\tan^{-1}\Big(\frac{a_z}{a_x}\Big)\Big)\]
+\[M_2 = \mathtt{rotZ\_mat}\Big(-\tan^{-1}\Big(\frac{a_y}{\sqrt{a_x^2+a_z^2}}\Big)\Big)\]
+\[M_3 = \mathtt{rotX\_mat}(\lambda)\]
+\[M_2^{-1} = \mathtt{rotZ\_mat}\Big(\tan^{-1}\Big(\frac{a_y}{\sqrt{a_x^2+a_z^2}}\Big)\Big)\]
+\[M_1^{-1} = \mathtt{rotY\_mat}(\tan^{-1}\Big(\frac{a_z}{a_x}\Big))\]
+
 \end{framed}
 
 
@@ -91,7 +160,7 @@ where $M_1$ rotates the arbitrary axis about the $y$ axis, $M_2$ rotates the arb
 \end{framed}
 
 \begin{framed}
-\vspace{10em}
+We can translate the world such that $h$ is the origin, then do our rotation, and translate back at the end.
 \end{framed}
 
 
@@ -102,16 +171,37 @@ Each $M_i$ corresponds to a step described in lecture. Here, $p$ is a point in w
 \begin{framed}
 \noindent {\bf [1/2 pt. each]} Briefly write out what each matrix is responsible for doing. Then write what values they have. Make sure to get the order correct (that is, matrix $M_4$ corresponds to only one of the steps described in lecture.)\\
 
-$M_1:$
-\vspace{3em}
+$M_1$ is a translation from the camera position $(x, y, z, 1)$ to the origin:
+\[M_1 = \begin{bmatrix}
+    1 & 0 & 0 & -x \\
+    0 & 1 & 0 & -y \\
+    0 & 0 & 1 & -z \\
+    0 & 0 & 0 & 1
+\end{bmatrix}\]
 
-$M_2:$\\\\
+$M_2$ is a rotation of the camera's coordinate system to the world's. As in the slides, we can define $(u, v, w)$ with $\vec{w} = \frac{-\vec{look}}{\lVert\vec{look}\rVert}$, $\vec{u} = \frac{\vec{up} \times \vec{w}}{\lVert\vec{up} \times \vec{w}\rVert}$, $\vec{v} = \vec{w} \times \vec{u}$, so that:
+\[M_2 = \begin{bmatrix}
+    u_x & u_y & u_z & 0 \\
+    v_x & v_y & v_z & 0 \\
+    w_x & w_y & w_z & 0 \\
+    0 & 0 & 0 & 1
+\end{bmatrix}\]
 
+$M_3$ is a scaling matrix,
+\[M_3 = \begin{bmatrix}
+    \frac{1}{\tan\big(\frac{\theta_w}{2}\big) far} & 0 & 0 & 0 \\
+    0 & \frac{1}{\tan\big(\frac{\theta_h}{2}\big) far} & 0 & 0 \\
+    0 & 0 & \frac{1}{far} & 0 \\
+    0 & 0 & 0 & 1
+\end{bmatrix}\]
 
-$M_3:$
-\vspace{3em}
-
-$M_4:$
+$M_4$ is an unhinging transform to transform from a perspective into a plane; we define $c = \frac{-near}{far}$ and assign:
+\[M_4 = \begin{bmatrix}
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    0 & 0 & \frac{1}{c+1} & \frac{-c}{c+1} \\
+    0 & 0 & -1 & 1
+\end{bmatrix}\]
 \vspace{3em}
 
 \end{framed}
@@ -119,10 +209,28 @@ $M_4:$
 \begin{framed}
 \noindent {\bf [1/2 pt. each]} How (mathematically) will you translate the camera's eye point $E$:
 \begin{enumerate}
-\item One unit right? $E' = $\\
-\item One unit down? $E' = $\\
-\item One unit forward? $E' = $\\
+\item One unit right? \\\\$E' = \begin{bmatrix}
+1 & 0 & 0 &  1 \\
+0 & 1 & 0 &  0 \\
+0 & 0 & 1 &  0 \\
+0 & 0 & 0 &  1
+\end{bmatrix} E$\\
+\item One unit down? \\\\$E' = \begin{bmatrix}
+1 & 0 & 0 &  0 \\
+0 & 1 & 0 & -1 \\
+0 & 0 & 1 &  0 \\
+0 & 0 & 0 &  1
+\end{bmatrix} E$\\
+\item One unit forward? \\\\$E' = \begin{bmatrix}
+1 & 0 & 0 &  1 \\
+0 & 1 & 0 &  0 \\
+0 & 0 & 1 & -1 \\
+0 & 0 & 0 &  1
+\end{bmatrix} E$\\
 \end{enumerate}
+
+In the space $(u, v, w)$ the rows of a vector or point correspond to $u, v$ and $w$ in that order, so to shift one unit right we add 1 to the $u$ component of a vector; similarly, since $v$ points up, we subtract 1 to move down, and since $w$ points away from the look vector we subtract one to move further in the direction we are looking.
+
 \end{framed}
 
 \noindent You can either move in and out of the camera coordinate space to perform these transformations, or you can do arbitrary rotations in world space. Both answers are acceptable.
@@ -131,8 +239,29 @@ $M_4:$
 \noindent {\bf [1/2 pt. each]} How (mathematically) will you use the $u$, $v$, and $w$ vectors, in conjunction with a rotation angle $\theta$, to get new $u$, $v$, and $w$ vectors when:
 \begin{enumerate}
 \item Adjusting the ``spin'' in a clockwise direction by $\theta$ radians?\\
+\[ \vec{w'} = -\begin{bmatrix}
+    1 &            0 &             0 & 0 \\
+    0 & \cos(\theta) & -\sin(\theta) & 0 \\
+    0 & \sin(\theta) &  \cos(\theta) & 0 \\
+               0 &             0 & 0 & 1
+\end{bmatrix}\vec{w}\]
+
+
 \item Adjusting (rotating) the ``pitch'' to face upwards by $\theta$ radians?\\
+\[\vec{u'} = \begin{bmatrix}
+    \cos(\theta) & -\sin(\theta) & 0 & 0 \\
+    \sin(\theta) &  \cos(\theta) & 0 & 0 \\
+               0 &             0 & 1 & 0 \\
+               0 &             0 & 0 & 1
+\end{bmatrix}\vec{u}
+\]
 \item Adjusting the ``yaw'' to face right by $\theta$ radians?\\
+\[ \vec{v'} = \begin{bmatrix}
+    \cos(\theta)  & 0 & \sin(\theta) & 0 \\
+               0  & 1 &            0 & 0 \\
+    -\sin(\theta) & 0 & \cos(\theta) & 0 \\
+               0  & 0 &            0 & 1
+\end{bmatrix}\vec{v}\]
 \end{enumerate}
 \end{framed}
 
@@ -142,11 +271,47 @@ $M_4:$
 \end{framed}
 
 \begin{framed}
-\vspace{10em}
+If we want to translate something $x_0$ units in the $x$ direction, $y_0$ units in the $y$ direction, and $z_0$ units in the $z$ direction,
+\[M_T = \begin{bmatrix}
+    1 & 0 & 0 & x_0 \\
+    0 & 1 & 0 & y_0 \\
+    0 & 0 & 1 & z_0 \\
+    0 & 0 & 0 & 1
+\end{bmatrix} \]
+
+Then the inverse translation, and also the inverse matrix, is:
+\[M_T^{-1} = \begin{bmatrix}
+    1 & 0 & 0 & -x_0 \\
+    0 & 1 & 0 & -y_0 \\
+    0 & 0 & 1 & -z_0 \\
+    0 & 0 & 0 & 1
+\end{bmatrix} \]
+
+We can check that $M_T M_T^{-1} = I$ with quick mental computation. This is clearly an easy transformation to invert, while the actual process of inverting a $4\times 4$ matrix involves a lot more work.
 \end{framed}
 
 
 {\bf Extra credit:} Will this same technique work for scale and rotation matrices? If so, write out the inverse scale and inverse rotation matrices. If not, explain why not. What about the perspective ``unhinging'' transformation? Will this technique be as efficient? Explain.
+\begin{framed}
+For rotations, we can convert by swapping our notion of $u, v, w$ and $x, y, z$, i.e.:
+\[M_{rotate}^{-1} = \begin{bmatrix}
+    x_u & x_v & x_w & 0 \\
+    y_u & y_v & y_w & 0 \\
+    z_u & z_v & z_w & 0 \\
+    0 & 0 & 0 & 1
+\end{bmatrix}\]
+
+For a scale, if we know $\theta_w$ and $\theta_h$ and $far$, then we can change the main column to be the multiplicative inverses of the regular scale matrix's elements to undo the multiplication (scale) that they do:
+
+\[M_{scale}^{-1} = \begin{bmatrix}
+    \tan\big(\frac{\theta_w}{2}\big) far & 0 & 0 & 0 \\
+    0 & \tan\big(\frac{\theta_h}{2}\big) far & 0 & 0 \\
+    0 & 0 & far & 0 \\
+    0 & 0 & 0 & 1
+\end{bmatrix}\]
+
+For the perspective unhinging transform the inverse will be easier, since we have so many zero elements that essentially only a $2\times 2$ submatrix that matters for the inverse, but we still have to invert that so it may not be as computationally valuable to do so.
+\end{framed}
 
 \section{How to Submit}
 

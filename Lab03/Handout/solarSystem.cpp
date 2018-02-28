@@ -19,6 +19,32 @@ void solarSystem::render() {
         // rotating the planets.
         static float rotation = 0.1;
         static float rotation2 = 0.0;
+        static double mrots[36] = {((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX};
+        static double mincs[36] = {((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX,
+                                   ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX};
+
+
         glPushMatrix();
         glTranslatef(0, 0, 0.1);
         glRotatef(rotation, 0, 1, 0);
@@ -96,10 +122,10 @@ void solarSystem::render() {
         glTranslatef(-7, 0, 0);
         glColor3f(0.26f, 0.85f, 0.26f);
         glutSolidSphere(0.4, 50, 50);
-        for (float i = 0; i < 36.0; i+=1.0) {
+        for (float i = 0.0; i < 36; i+=1.0) {
                 glPushMatrix();
-                glRotatef(fmod(i, 4) + fmod(i, 3.65) + i*i/36.0, i / 36.0, i / 36.0, 0);
-                glTranslatef(1.0 / 36.0 * i, 0, 0);
+                glRotatef(mrots[int(roundf(i))], 0, 0, 1);
+                glTranslatef(1.0 / 36.0 * i + 0.4, 0, 0);
                 glColor3f(1.0f, 1.0/36.0 * i, 1.0f);
                 glutSolidSphere(0.03, 50, 50);
                 glPopMatrix();
@@ -114,8 +140,9 @@ void solarSystem::render() {
         glPopMatrix();
         glPopMatrix();
 
-        // Add more planets, moons, and rings here!
-
+        for (int i = 0; i < 36; i++) {
+                mrots[i] += mincs[i];
+        }
         rotation += 0.1;
         rotation2 += 1;
 }
