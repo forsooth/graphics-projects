@@ -30,9 +30,9 @@ ply::ply(string _filePath){
         faceList = NULL;
         edgeList = NULL;
         properties = 0; 
-        vertexCount = 0;
-        faceCount = 0;
-        edgeCount = 0;
+		vertexCount = 0;
+		faceCount = 0;
+		edgeCount = 0;
         // Call helper function to load geometry
         loadGeometry();
 }
@@ -126,7 +126,6 @@ void ply::loadGeometry(){
                     token_pointer = strtok(NULL, " ");
                     faceCount = atoi(token_pointer);
                     faceList = new face[faceCount];
-                    edgeList = new edge[faceCount * 3];
                 }
             }
             // if property label increment the number of properties.
@@ -188,11 +187,11 @@ void ply::loadGeometry(){
                 faceList[i].vertexList[j] = atoi(strtok(NULL, " "));
             }
         }
-        delete[] lineCopy;
+        delete(lineCopy);
     }
     // if the path is invalid, report then exit.
     else {
-        cout << "cannot open file " << filePath.c_str() << "\n";
+		cout << "cannot open file " << filePath.c_str() << "\n";
         exit(1);
     }
     myfile.close();
@@ -283,10 +282,6 @@ void ply::render(){
 //loads data structures so edges are known
 void ply::findEdges(){
     //edges, if you want to use this data structure
-    for (int i < faceCount; i++) {
-        face f = faceList[i];
-        edgeList
-    }
     //TODO add all the edges to the edgeList and make sure they have both faces
 } 
 

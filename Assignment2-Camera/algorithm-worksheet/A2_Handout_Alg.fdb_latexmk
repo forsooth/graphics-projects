@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1519803082 "A2_Handout_Alg.tex" "A2_Handout_Alg.pdf" "A2_Handout_Alg" 1519803082
+["pdflatex"] 1519851916 "A2_Handout_Alg.tex" "A2_Handout_Alg.pdf" "A2_Handout_Alg" 1519851916
   "/usr/share/texmf-dist/fonts/map/fontname/texfonts.map" 1510784337 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1510784344 1004 54797486969f23fa377b128694d548df ""
   "/usr/share/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1510784344 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -94,11 +94,11 @@
   "/usr/share/texmf-dist/web2c/texmf.cnf" 1510784374 32585 d82bbcf7626b7842c87671687479e852 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1517510290 2404736 6ca9e6023b4459829efec74926ef1c58 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1516693782 7736838 25f59eab435a289f5a41d249c12e1ad7 ""
-  "A2_Handout_Alg.aux" 1519803082 1434 03a22cb953c83df633da966fd4f1a226 ""
-  "A2_Handout_Alg.out" 1519803082 476 fb3e1571411097033e50aa937ef4b546 ""
-  "A2_Handout_Alg.tex" 1519803082 13839 599a976f8a52b4eacd447a68f553ca91 ""
+  "A2_Handout_Alg.aux" 1519851916 1434 03a22cb953c83df633da966fd4f1a226 ""
+  "A2_Handout_Alg.out" 1519851916 476 fb3e1571411097033e50aa937ef4b546 ""
+  "A2_Handout_Alg.tex" 1519851916 14572 c65702e2f3497de18846dc4d3e87dbe8 ""
   (generated)
+  "A2_Handout_Alg.pdf"
+  "A2_Handout_Alg.log"
   "A2_Handout_Alg.aux"
   "A2_Handout_Alg.out"
-  "A2_Handout_Alg.log"
-  "A2_Handout_Alg.pdf"

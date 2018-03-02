@@ -171,36 +171,36 @@ Each $M_i$ corresponds to a step described in lecture. Here, $p$ is a point in w
 \begin{framed}
 \noindent {\bf [1/2 pt. each]} Briefly write out what each matrix is responsible for doing. Then write what values they have. Make sure to get the order correct (that is, matrix $M_4$ corresponds to only one of the steps described in lecture.)\\
 
-$M_1$ is a translation from the camera position $(x, y, z, 1)$ to the origin:
-\[M_1 = \begin{bmatrix}
+$M_4$ is a translation from the camera position $(x, y, z, 1)$ to the origin:
+\[M_4 = \begin{bmatrix}
     1 & 0 & 0 & -x \\
     0 & 1 & 0 & -y \\
     0 & 0 & 1 & -z \\
     0 & 0 & 0 & 1
 \end{bmatrix}\]
 
-$M_2$ is a rotation of the camera's coordinate system to the world's. As in the slides, we can define $(u, v, w)$ with $\vec{w} = \frac{-\vec{look}}{\lVert\vec{look}\rVert}$, $\vec{u} = \frac{\vec{up} \times \vec{w}}{\lVert\vec{up} \times \vec{w}\rVert}$, $\vec{v} = \vec{w} \times \vec{u}$, so that:
-\[M_2 = \begin{bmatrix}
+$M_3$ is a rotation of the camera's coordinate system to the world's. As in the slides, we can define $(u, v, w)$ with $\vec{w} = \frac{-\vec{look}}{\lVert\vec{look}\rVert}$, $\vec{u} = \frac{\vec{up} \times \vec{w}}{\lVert\vec{up} \times \vec{w}\rVert}$, $\vec{v} = \vec{w} \times \vec{u}$, so that:
+\[M_3 = \begin{bmatrix}
     u_x & u_y & u_z & 0 \\
     v_x & v_y & v_z & 0 \\
     w_x & w_y & w_z & 0 \\
     0 & 0 & 0 & 1
 \end{bmatrix}\]
 
-$M_3$ is a scaling matrix,
-\[M_3 = \begin{bmatrix}
+$M_2$ is a scaling matrix,
+\[M_2 = \begin{bmatrix}
     \frac{1}{\tan\big(\frac{\theta_w}{2}\big) far} & 0 & 0 & 0 \\
     0 & \frac{1}{\tan\big(\frac{\theta_h}{2}\big) far} & 0 & 0 \\
     0 & 0 & \frac{1}{far} & 0 \\
     0 & 0 & 0 & 1
 \end{bmatrix}\]
 
-$M_4$ is an unhinging transform to transform from a perspective into a plane; we define $c = \frac{-near}{far}$ and assign:
-\[M_4 = \begin{bmatrix}
+$M_1$ is an unhinging transform to transform from a perspective into a plane; we define $c = \frac{-near}{far}$ and assign:
+\[M_1 = \begin{bmatrix}
     1 & 0 & 0 & 0 \\
     0 & 1 & 0 & 0 \\
     0 & 0 & \frac{1}{c+1} & \frac{-c}{c+1} \\
-    0 & 0 & -1 & 1
+    0 & 0 & -1 & 0
 \end{bmatrix}\]
 \vspace{3em}
 
@@ -293,7 +293,7 @@ We can check that $M_T M_T^{-1} = I$ with quick mental computation. This is clea
 
 {\bf Extra credit:} Will this same technique work for scale and rotation matrices? If so, write out the inverse scale and inverse rotation matrices. If not, explain why not. What about the perspective ``unhinging'' transformation? Will this technique be as efficient? Explain.
 \begin{framed}
-For rotations, we can convert by swapping our notion of $u, v, w$ and $x, y, z$, i.e.:
+For the rotation in perspective/parallel camera spaces, we can convert by swapping our notion of $u, v, w$ and $x, y, z$, i.e.:
 \[M_{rotate}^{-1} = \begin{bmatrix}
     x_u & x_v & x_w & 0 \\
     y_u & y_v & y_w & 0 \\
@@ -301,7 +301,9 @@ For rotations, we can convert by swapping our notion of $u, v, w$ and $x, y, z$,
     0 & 0 & 0 & 1
 \end{bmatrix}\]
 
-For a scale, if we know $\theta_w$ and $\theta_h$ and $far$, then we can change the main column to be the multiplicative inverses of the regular scale matrix's elements to undo the multiplication (scale) that they do:
+If we just want to do an arbitrary rotation inverse, if the rotation was by $\theta$ degrees we could just rotate by $-\theta$; this reverses the sign of the $sin$ functions but not $cos$ in the rotation matrices.
+
+For the scale to scale camera world space, if we know $\theta_w$ and $\theta_h$ and $far$, then we can change the main column to be the multiplicative inverses of the regular scale matrix's elements to undo the multiplication (scale) that they do:
 
 \[M_{scale}^{-1} = \begin{bmatrix}
     \tan\big(\frac{\theta_w}{2}\big) far & 0 & 0 & 0 \\
@@ -310,7 +312,17 @@ For a scale, if we know $\theta_w$ and $\theta_h$ and $far$, then we can change 
     0 & 0 & 0 & 1
 \end{bmatrix}\]
 
-For the perspective unhinging transform the inverse will be easier, since we have so many zero elements that essentially only a $2\times 2$ submatrix that matters for the inverse, but we still have to invert that so it may not be as computationally valuable to do so.
+For an arbitrary scale we do the same thing; the inverse of a scale with main diagonal $S_x, S_y, S_z, 1$ will be the matrix with main diagonal $\frac{1}{S_x}, \frac{1}{S_y}, \frac{1}{S_z}, 1$
+
+For the perspective unhinging transform the inverse should be fairly easy, since we have so many zero elements that essentially only a $2\times 2$ submatrix that matters for the inverse; this gives us:
+\[M_{unhinge}^{-1} = \begin{bmatrix}
+    1 & 0 & 0 & 0 \\
+    0 & 1 & 0 & 0 \\
+    0 & 0 & 0 & -1 \\
+    0 & 0 & -\frac{1+c}{c} & \frac{1}{c}
+\end{bmatrix}\]
+
+Most of these shortcuts will be computationally preferable to a full 4x4 matrix inversion, especially those with a high number of nonzero elements.
 \end{framed}
 
 \section{How to Submit}
