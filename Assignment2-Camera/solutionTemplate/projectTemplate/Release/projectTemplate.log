@@ -1,0 +1,58 @@
+﻿  Cube.cpp
+C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\include\GL/glui.h(850): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+Cube.cpp(59): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+Cube.cpp(60): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+Cube.cpp(61): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+Cube.cpp(62): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+Cube.cpp(84): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+Cube.cpp(85): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+Cube.cpp(86): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+Cube.cpp(87): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+Cube.cpp(88): warning C4305: 'argument': truncation from 'double' to 'float'
+Cube.cpp(89): warning C4305: 'argument': truncation from 'double' to 'float'
+Cube.cpp(90): warning C4305: 'argument': truncation from 'double' to 'float'
+Cube.cpp(91): warning C4305: 'argument': truncation from 'double' to 'float'
+Cube.cpp(92): warning C4305: 'argument': truncation from 'double' to 'float'
+Cube.cpp(93): warning C4305: 'argument': truncation from 'double' to 'float'
+  Cylinder.cpp
+C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\include\GL/glui.h(850): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+Cylinder.cpp(20): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+Cylinder.cpp(29): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+Cylinder.cpp(62): warning C4305: 'initializing': truncation from 'double' to 'float'
+Cylinder.cpp(63): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+Cylinder.cpp(66): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+Cylinder.cpp(76): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+  Sphere.cpp
+C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\include\GL/glui.h(850): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+Sphere.cpp(23): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+Sphere.cpp(29): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+Sphere.cpp(31): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+Sphere.cpp(57): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+Sphere.cpp(59): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating code
+  All 360 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+glui32.lib(algebra3.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(algebra3.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(arcball.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(arcball.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_add_controls.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_add_controls.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_bitmaps.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_bitmaps.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_button.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_button.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_checkbox.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_checkbox.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_column.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_column.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_control.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_control.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_edittext.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_edittext.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_listbox.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_listbox.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_mouse_iaction.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_mouse_iaction.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_node.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_node.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_panel.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_panel.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_radio.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_radio.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_rollout.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_rollout.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_rotation.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_rotation.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_separator.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_separator.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_spinner.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_spinner.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_statictext.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_statictext.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_translation.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_translation.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(glui_window.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(glui_window.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+glui32.lib(quaternion.obj) : warning LNK4099: PDB '_glui library.pdb' was not found with 'glui32.lib(quaternion.obj)' or at 'C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\_glui library.pdb'; linking object as if no debug info
+  projectTemplate.vcxproj -> C:\Users\Fury\Desktop\Repos\comp175-hw1to3\Assignment2-Camera\solutionTemplate\projectTemplate\Release\projectTemplate.exe

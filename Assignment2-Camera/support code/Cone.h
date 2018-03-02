@@ -1,18 +1,17 @@
-#ifndef COHE_H
+#ifndef CONE_H
 #define CONE_H
 
 #include "Shape.h"
 
 class Cone : public Shape {
 public:
-	Cone() {};
-	~Cone() {};
+        Cone();
+        virtual ~Cone() = default;
 
-	void draw() {
-	};
 
-	void drawNormal() {
-	};
+        void draw();
+
+        void drawNormal();
 };
 
 #endif

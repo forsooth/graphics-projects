@@ -5,13 +5,11 @@
 
 class Cylinder : public Shape {
 public:
-	Cylinder() {};
-	~Cylinder() {};
+        Cylinder();
+        virtual ~Cylinder() = default;
 
-	void draw() {
-	};
+        void draw();
+        void drawNormal();
 
-	void drawNormal() {
-	};
 };
 #endif

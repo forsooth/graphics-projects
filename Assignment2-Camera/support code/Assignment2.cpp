@@ -1,4 +1,5 @@
 #include <GL/glui.h>
+#include <GL/freeglut.h>
 #include "Shape.h"
 #include "Cube.h"
 #include "Cylinder.h"

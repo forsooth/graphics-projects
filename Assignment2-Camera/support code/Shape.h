@@ -2,7 +2,10 @@
 #define SHAPE_H
 
 #include <GL/glui.h>
+#include <GL/freeglut.h>
 #include "Algebra.h"
+
+#define NormL 1.1
 
 class Shape {
 public:

@@ -5,14 +5,12 @@
 
 class Sphere : public Shape {
 public:
-	Sphere() {};
-	~Sphere() {};
+        Sphere();
+        virtual ~Sphere() = default;
 
-	void draw() {
-	};
+        void draw();
 
-	void drawNormal() {
-	};
+        void drawNormal();
 };
 
 #endif

@@ -5,15 +5,13 @@
 
 class Cube : public Shape {
 public:
-	Cube() {};
-	~Cube() {};
+        Cube();
+        virtual ~Cube() = default;
 
-	void draw() {
-	};
+        void draw();
 
 
-	void drawNormal() {
-	};
+        void drawNormal();
 };
 
 #endif
