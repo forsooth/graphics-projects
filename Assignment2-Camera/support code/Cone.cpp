@@ -2,49 +2,49 @@
 
 Cone::Cone() {};
 
-static inline void cylinrical_v(float r, float θ, float y) {
+static inline void cylinrical_v(float r, float theta, float y) {
         float x, z;
-        x = cos(θ);
-        z = sin(θ);
+        x = cos(theta);
+        z = sin(theta);
         glNormal3f(x, 0.0, z);
-        x = r * cos(θ);
-        z = r * sin(θ);
+        x = r * cos(theta);
+        z = r * sin(theta);
         glVertex3f(x, y, z);
 }
 
-static inline void cylindrical_n(float r, float θ, float y) {
+static inline void cylindrical_n(float r, float theta, float y) {
         float x, z;
-        x = r * cos(θ);
-        z = r * sin(θ);
+        x = r * cos(theta);
+        z = r * sin(theta);
         glVertex3f(x, y, z);
-        glVertex3f(x + 2 * sqrt(5)/5 * 0.1 * cos(θ), y + (sqrt(5)/5 * 0.1), z + 2 * sqrt(5)/5 * 0.1 * sin(θ));
+        glVertex3f(x + 2 * sqrt(5)/5 * 0.1 * cos(theta), y + (sqrt(5)/5 * 0.1), z + 2 * sqrt(5)/5 * 0.1 * sin(theta));
 }
 
 void Cone::draw() {
         glBegin(GL_TRIANGLES);
         float R = 0.5;
         float y = R;
-        float Δy = 2 * R / float(m_segmentsY);
-        float Δθ = 2 * PI / float(m_segmentsX);
-        float θ = 0.0f;
+        float deltay = 2 * R / float(m_segmentsY);
+        float deltatheta = 2 * PI / float(m_segmentsX);
+        float theta = 0.0f;
         for (int pieslice = 0; pieslice < m_segmentsX; pieslice++) {
                 float r = 0;
-                float Δr = R / m_segmentsY;
+                float deltar = R / m_segmentsY;
                 for (int layer = 0; layer < m_segmentsY; layer++) {
-                        cylinrical_v(r, θ, y);
-                        cylinrical_v(r + Δr, θ, y - Δy);
-                        cylinrical_v(r, θ + Δθ, y);
-                        cylinrical_v(r + Δr, θ + Δθ, y - Δy);
-                        cylinrical_v(r, θ + Δθ, y);
-                        cylinrical_v(r + Δr, θ, y - Δy);
-                        y -= Δy;
-                        r += Δr;
+                        cylinrical_v(r, theta, y);
+                        cylinrical_v(r + deltar, theta, y - deltay);
+                        cylinrical_v(r, theta + deltatheta, y);
+                        cylinrical_v(r + deltar, theta + deltatheta, y - deltay);
+                        cylinrical_v(r, theta + deltatheta, y);
+                        cylinrical_v(r + deltar, theta, y - deltay);
+                        y -= deltay;
+                        r += deltar;
                 }
                 glNormal3f(0.0, -1.0, 0.0);
-                glVertex3f(R * cos(θ), y, R * sin(θ));
+                glVertex3f(R * cos(theta), y, R * sin(theta));
                 glVertex3f(0.0, y, 0.0);
-                glVertex3f(R * cos(θ + Δθ), y, R * sin(θ + Δθ));
-                θ += Δθ;
+                glVertex3f(R * cos(theta + deltatheta), y, R * sin(theta + deltatheta));
+                theta += deltatheta;
                 y = R;
 
         }
@@ -57,26 +57,26 @@ void Cone::drawNormal() {
         glBegin(GL_LINES);
         float R = 0.5;
         float y = R;
-        float Δy = 2 * R / float(m_segmentsY);
-        float Δθ = 2 * PI / float(m_segmentsX);
-        float θ = 0.0f;
+        float deltay = 2 * R / float(m_segmentsY);
+        float deltatheta = 2 * PI / float(m_segmentsX);
+        float theta = 0.0f;
         glVertex3f(0.0, -R, 0.0);
         glVertex3f(0.0, -R - NormL, 0.0);
         for (int pieslice = 0; pieslice < m_segmentsX; pieslice++) {
                 float r = 0;
-                float Δr = R / m_segmentsY;
+                float deltar = R / m_segmentsY;
                 for (int layer = 0; layer < m_segmentsY; layer++) {
                         if (r != 0) {
-                                cylindrical_n(r, θ, y);
-                                cylindrical_n(r, θ + Δθ, y);
-                                cylindrical_n(r + Δr, θ + Δθ, y - Δy);
-                                cylindrical_n(r + Δr, θ, y - Δy);
+                                cylindrical_n(r, theta, y);
+                                cylindrical_n(r, theta + deltatheta, y);
+                                cylindrical_n(r + deltar, theta + deltatheta, y - deltay);
+                                cylindrical_n(r + deltar, theta, y - deltay);
 
                         }
-                        y -= Δy;
-                        r += Δr;
+                        y -= deltay;
+                        r += deltar;
                 }
-                θ += Δθ;
+                theta += deltatheta;
                 y = R;
         }
         glEnd();

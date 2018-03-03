@@ -10,8 +10,8 @@ const double EPSILON = 1e-30;
 #define DBL_MAX 1.7976931348623158e+308  //this defines the max double
 
 #define IN_RANGE(a,b)   (((a>(b-EPSILON))&&(a<(b+EPSILON)))?1:0)
-#define DEG_TO_RAD(a)	(a*RAD)
-#define RAD_TO_DEG(a)	(a/RAD)
+#define DEG_TO_RAD(a)	((a)*RAD)
+#define RAD_TO_DEG(a)	((a)/RAD)
 #define SQR(a)	 (a*a)
 
 class Point {
@@ -85,6 +85,10 @@ public:
 		return p[i];
 	}
 
+	double x() { return p[0]; }
+	double y() { return p[1]; }
+	double z() { return p[2]; }
+
 	double operator[] (int i) const {
 		return p[i];
 	};
@@ -139,6 +143,17 @@ public:
 		p[2] = v[2];
 		p[3] = 0;
 	};
+
+	Vector(const Point& v) {
+		p[0] = v[0];
+		p[1] = v[1];
+		p[2] = v[2];
+		p[3] = 0;
+	};
+
+	double x() { return p[0]; }
+	double y() { return p[1]; }
+	double z() { return p[2]; }
 
 	~Vector() {};
 
@@ -619,6 +634,15 @@ inline Matrix rotZ_mat(double radians) {
 		0, 0, 1, 0,
 		0, 0, 0, 1);
 	return m;
+};
+
+inline Matrix cam_rot_mat(Vector &u, Vector &v, Vector &w)
+{
+	return(Matrix(u.x(), u.y(), u.z(), 0,
+	       	      v.x(), v.y(), v.z(), 0,
+	       	      w.x(), w.y(), w.z(), 0,
+	       	      0,     0,     0,     1)
+		);
 };
 
 // Returns a rotation matrix effecting a rotation around the given vector and
