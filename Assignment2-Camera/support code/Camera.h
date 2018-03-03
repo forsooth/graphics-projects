@@ -12,17 +12,12 @@ private:
 Matrix cam_trans, cam_rot;
 // projection matrix
 Matrix cam_scale, unhinge;
-double viewAngle;
-double nearPlane;
-double farPlane;
-double depth;
-int screenWidth;
-int screenHeight;
+double viewAngle, nearPlane, farPlane, depth;
+int screenWidth, screenHeight;
 double aspectRatio;
-Vector look;
-Vector up;
-Point eye;
+Vector look, up;
 Vector U, V, W;
+Point eye;
 
 public:
 Camera();

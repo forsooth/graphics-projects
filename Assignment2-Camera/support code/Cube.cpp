@@ -3,31 +3,31 @@
 Cube::Cube() {};
 
 static inline void draw_face(float xorig, float yorig, float zorig,
-                             float thetax, float thetay, float thetaz_r, float thetaz_c,
+                             float Δx, float Δy, float Δz_r, float Δz_c,
                              float xs, float ys, float zs) {
         float x = xorig, y = yorig, z = zorig;
         for (int cur_y = 0; cur_y < ys; cur_y++) {
                 for (int cur_z = 0; cur_z < zs; cur_z++) {
                         for (int cur_x = 0; cur_x < xs; cur_x++) {
                                 glVertex3f(x, y, z);
-                                glVertex3f(x + thetax, y, z + thetaz_c);
-                                glVertex3f(x, y + thetay, z + thetaz_r);
+                                glVertex3f(x + Δx, y, z + Δz_c);
+                                glVertex3f(x, y + Δy, z + Δz_r);
 
-                                glVertex3f(x, y + thetay, z + thetaz_r);
-                                glVertex3f(x + thetax, y, z + thetaz_c);
-                                glVertex3f(x + thetax, y + thetay, z + thetaz_r + thetaz_c);
-                                x += thetax;
+                                glVertex3f(x, y + Δy, z + Δz_r);
+                                glVertex3f(x + Δx, y, z + Δz_c);
+                                glVertex3f(x + Δx, y + Δy, z + Δz_r + Δz_c);
+                                x += Δx;
                         }
                         x = xorig;
-                        z += thetaz_r + thetaz_c;
+                        z += Δz_r + Δz_c;
                 }
                 z = zorig;
-                y += thetay;
+                y += Δy;
         }
 }
 
 static inline void draw_normal_face(float xorig, float yorig, float zorig,
-                             float thetax, float thetay, float thetaz_r, float thetaz_c,
+                             float Δx, float Δy, float Δz_r, float Δz_c,
                              float xs, float ys, float zs,
                              float xscale, float yscale, float zscale) {
         float x = xorig, y = yorig, z = zorig;
@@ -36,19 +36,19 @@ static inline void draw_normal_face(float xorig, float yorig, float zorig,
                         for (int cur_x = 0; cur_x < xs; cur_x++) {
                                 glVertex3f(x, y, z);
                                 glVertex3f(xscale * x, yscale * y, zscale * z);
-                                glVertex3f(x + thetax, y, z + thetaz_c);
-                                glVertex3f(xscale * (x + thetax), yscale * y, zscale * (z + thetaz_c));
-                                glVertex3f(x, y + thetay, z + thetaz_r);
-                                glVertex3f(xscale * x, yscale * (y + thetay), zscale * (z + thetaz_r));
-                                glVertex3f(x + thetax, y + thetay, z + thetaz_r + thetaz_c);
-                                glVertex3f(xscale * (x + thetax), yscale * (y + thetay), zscale * (z + thetaz_r + thetaz_c));
-                                x += thetax;
+                                glVertex3f(x + Δx, y, z + Δz_c);
+                                glVertex3f(xscale * (x + Δx), yscale * y, zscale * (z + Δz_c));
+                                glVertex3f(x, y + Δy, z + Δz_r);
+                                glVertex3f(xscale * x, yscale * (y + Δy), zscale * (z + Δz_r));
+                                glVertex3f(x + Δx, y + Δy, z + Δz_r + Δz_c);
+                                glVertex3f(xscale * (x + Δx), yscale * (y + Δy), zscale * (z + Δz_r + Δz_c));
+                                x += Δx;
                         }
                         x = xorig;
-                        z += thetaz_r + thetaz_c;
+                        z += Δz_r + Δz_c;
                 }
                 z = zorig;
-                y += thetay;
+                y += Δy;
         }
 }
 

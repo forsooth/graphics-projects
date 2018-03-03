@@ -1,12 +1,12 @@
-#include "Cone.h"
+#include "Special.h"
 
-Cone::Cone() {};
+Special::Special() {};
 
 static inline void cylinrical_v(float r, float θ, float y) {
         float x, z;
         x = cos(θ);
         z = sin(θ);
-        glNormal3f(x, 0.0, z);
+        glNormal3f(-x, 0.0, -z);
         x = r * cos(θ);
         z = r * sin(θ);
         glVertex3f(x, y, z);
@@ -20,7 +20,7 @@ static inline void cylindrical_n(float r, float θ, float y) {
         glVertex3f(x + 2 * sqrt(5)/5 * 0.1 * cos(θ), y + (sqrt(5)/5 * 0.1), z + 2 * sqrt(5)/5 * 0.1 * sin(θ));
 }
 
-void Cone::draw() {
+void Special::draw() {
         glBegin(GL_TRIANGLES);
         float R = 0.5;
         float y = R;
@@ -37,13 +37,17 @@ void Cone::draw() {
                         cylinrical_v(r + Δr, θ + Δθ, y - Δy);
                         cylinrical_v(r, θ + Δθ, y);
                         cylinrical_v(r + Δr, θ, y - Δy);
+                        glNormal3f(0.0, 1, 0.0);
+                        glVertex3f(r * cos(θ), y, r * sin(θ));
+                        glVertex3f(0.0, y, 0.0);
+                        glVertex3f(r * cos(θ + Δθ), y, r * sin(θ + Δθ));
+                        glNormal3f(0.0, -1, 0.0);
+                        glVertex3f((r + Δr) * cos(θ), y - Δy, (r + Δr) * sin(θ));
+                        glVertex3f(0.0, y - Δy, 0.0);
+                        glVertex3f((r + Δr) * cos(θ + Δθ), y - Δy, (r + Δr) * sin(θ + Δθ));
                         y -= Δy;
-                        r += Δr;
+                        r -= Δr;
                 }
-                glNormal3f(0.0, -1.0, 0.0);
-                glVertex3f(R * cos(θ), y, R * sin(θ));
-                glVertex3f(0.0, y, 0.0);
-                glVertex3f(R * cos(θ + Δθ), y, R * sin(θ + Δθ));
                 θ += Δθ;
                 y = R;
 
@@ -52,7 +56,7 @@ void Cone::draw() {
 
 };
 
-void Cone::drawNormal() {
+void Special::drawNormal() {
         glColor3f(1.0, 0.0, 0.0);
         glBegin(GL_LINES);
         float R = 0.5;
@@ -69,9 +73,6 @@ void Cone::drawNormal() {
                         if (r != 0) {
                                 cylindrical_n(r, θ, y);
                                 cylindrical_n(r, θ + Δθ, y);
-                                cylindrical_n(r + Δr, θ + Δθ, y - Δy);
-                                cylindrical_n(r + Δr, θ, y - Δy);
-
                         }
                         y -= Δy;
                         r += Δr;
