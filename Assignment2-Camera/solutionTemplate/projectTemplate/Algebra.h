@@ -636,11 +636,8 @@ inline Matrix rotZ_mat(double radians) {
 	return m;
 };
 
-inline Matrix cam_rot_mat(Vector &up, Vector &look)
+inline Matrix cam_rot_mat(Vector &u, Vector &v, Vector &w)
 {
-	Vector w = -look / length(look);
-	Vector u = cross(up, w) / length(cross(up, w));
-	Vector v = cross(w, u);
 	return(Matrix(u.x(), u.y(), u.z(), 0,
 	       	      v.x(), v.y(), v.z(), 0,
 	       	      w.x(), w.y(), w.z(), 0,
