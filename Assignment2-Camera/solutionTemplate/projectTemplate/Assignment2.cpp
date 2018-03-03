@@ -6,6 +6,7 @@
 #include "Cone.h"
 #include "Sphere.h"
 #include "Camera.h"
+#include "Special.h"
 
 enum OBJ_TYPE {
 	SHAPE_CUBE = 0,
@@ -51,7 +52,8 @@ Cube* cube = new Cube();
 Cylinder* cylinder = new Cylinder();
 Cone* cone = new Cone();
 Sphere* sphere = new Sphere();
-Shape* shape = cube;
+Special* special = new Special();
+Shape *shape = cube;
 Camera* camera = new Camera();
 
 /***************************************** callback_obj() ***********/
@@ -71,7 +73,7 @@ void callback_obj(int id) {
 		shape = sphere;
 		break;
 	case SHAPE_SPECIAL1:
-		shape = cube;
+		shape = special;
 		break;
 	default:
 		shape = cube;

@@ -25,6 +25,7 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="Shape.h" />
+    <ClInclude Include="Special.h" />
     <ClInclude Include="Sphere.h" />
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +34,7 @@
     <ClCompile Include="Cone.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="Special.cpp" />
     <ClCompile Include="Sphere.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
