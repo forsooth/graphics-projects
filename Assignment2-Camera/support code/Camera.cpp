@@ -28,7 +28,7 @@ Camera::~Camera() {
 }
 
 void Camera::Orient(Point& eye, Point& focus, Vector& up) {
-        look = Vector((focus.x() - eye.x()), (focus.y() - eye.y()), (focus.z() - eye.z()));
+        look = Vector(focus - eye);
         Orient(eye, look, up);
 }
 
@@ -48,8 +48,8 @@ Matrix Camera::GetModelViewMatrix() {
 }
 
 Matrix Camera::GetProjectionMatrix() {
-        double thetaW = ((PI / 180.0) * viewAngle);
-        double thetaH = thetaW / aspectRatio;
+        double thetaH = RAD * viewAngle;
+        double thetaW = thetaH * aspectRatio;
         Vector scale = Vector(1.0 / (tan(thetaW / 2.0) * farPlane),
                               1.0 / (tan(thetaH / 2.0) * farPlane),
                               1.0 / farPlane);
@@ -57,7 +57,7 @@ Matrix Camera::GetProjectionMatrix() {
         double c = -nearPlane / farPlane;
         unhinge = Matrix(1, 0, 0, 0,
                          0, 1, 0, 0,
-                         0, 0, (1.0 / (c + 1)), (-c / (c + 1)),
+                         0, 0, (-1.0 / (c + 1)), (c / (c + 1)),
                          0, 0, -1, 0);
         return unhinge * cam_scale;
 }
@@ -73,32 +73,32 @@ void Camera::SetNearPlane(double nearPlane) {
 
 void Camera::SetFarPlane(double farPlane) {
         this->farPlane = farPlane;
-        this->depth = (farPlane - nearPlane);
+        depth = (farPlane - nearPlane);
 }
 
 void Camera::SetScreenSize (int screenWidth, int screenHeight) {
         this->screenWidth = screenWidth;
         this->screenHeight = screenHeight;
-        this->aspectRatio = ((double)screenWidth) / ((double)screenHeight);
+        aspectRatio = ((double)screenWidth) / ((double)screenHeight);
 }
 
 void Camera::RotateV(double angle) {
         if (angle == 0) { return; }
-        Matrix rot_m = rot_mat(eye, V, PI / 180.0 * angle);
+        Matrix rot_m = rot_mat(eye, V, RAD * angle);
         U = rot_m * U;
         W = rot_m * W;
 }
 
 void Camera::RotateU(double angle) {
         if (angle == 0) { return; }
-        Matrix rot_m = rot_mat(eye, U, PI / 180.0 * angle);
+        Matrix rot_m = rot_mat(eye, U, RAD * angle);
         V = rot_m * V;
         W = rot_m * W;
 }
 
 void Camera::RotateW(double angle) {
         if (angle == 0) { return; }
-        Matrix rot_m = rot_mat(eye, W, PI / 180.0 * angle);
+        Matrix rot_m = rot_mat(eye, W, RAD * angle);
         U = rot_m * U;
         V = rot_m * V;
 }
@@ -108,7 +108,7 @@ void Camera::Translate(const Vector &v) {
 }
 
 void Camera::Rotate(Point p, Vector axis, double degrees) {
-        Matrix rot_m = rot_mat(p, axis, PI / 180.0 * degrees);
+        Matrix rot_m = rot_mat(p, axis, RAD * degrees);
         U = rot_m * U;
         V = rot_m * V;
         W = rot_m * W;

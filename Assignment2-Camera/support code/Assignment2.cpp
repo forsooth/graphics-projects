@@ -166,7 +166,7 @@ void myGlutDisplay(void)
     glEnable(GL_LIGHTING);
         if (fill) {
                 glEnable(GL_POLYGON_OFFSET_FILL);
-                glColor3f(1, 1, 1);
+                glColor3f(0.5, 0.5, 0.5);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
                 shape->draw();
         }
