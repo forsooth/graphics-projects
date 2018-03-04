@@ -108,6 +108,7 @@ void Camera::Translate(const Vector &v) {
 }
 
 void Camera::Rotate(Point p, Vector axis, double degrees) {
+        if (degrees == 0) { return; }
         Matrix rot_m = rot_mat(p, axis, RAD * degrees);
         U = rot_m * U;
         V = rot_m * V;

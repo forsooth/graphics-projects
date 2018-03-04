@@ -59,6 +59,7 @@ Camera* camera = new Camera();
 /***************************************** callback_obj() ***********/
 
 void callback_obj(int id) {
+    (void) id;
         switch (objType) {
         case SHAPE_CUBE:
                 shape = cube;
