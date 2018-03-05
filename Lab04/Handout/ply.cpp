@@ -125,8 +125,12 @@ void ply::loadGeometry(){
                 if (strcmp(token_pointer, "face") == 0){
                     token_pointer = strtok(NULL, " ");
                     faceCount = atoi(token_pointer);
+                    edgeCount = ceil(((double)faceCount) * 3.0 / 2.0);
                     faceList = new face[faceCount];
-                    edgeList = new edge[faceCount * 3];
+                    edgeList = new edge[edgeCount];
+                    for (int i = 0; i < edgeCount; i++) {
+                        edgeList[i] = edge();
+                    }
                 }
             }
             // if property label increment the number of properties.
@@ -134,7 +138,7 @@ void ply::loadGeometry(){
             // if end_header break the header loop and move to reading vertices.
             if (strcmp(token_pointer, "end_header") == 0) {reading_header = false; }
         }
-        
+
         // Read in exactly vertexCount number of lines after reading the header
         // and set the appropriate vertex in the vertexList.
         for (int i = 0; i < vertexCount; i++){
@@ -279,15 +283,52 @@ void ply::render(){
         glPopMatrix();
 }
 
-
 //loads data structures so edges are known
-void ply::findEdges(){
+void ply::findEdges() {
     //edges, if you want to use this data structure
-    for (int i < faceCount; i++) {
+    for (int i = 0; i < faceCount; i++) {
         face f = faceList[i];
-        edgeList
+
+        edge e1 = edge();
+        e1.vertices[0] = f.vertexList[0];
+        e1.vertices[1] = f.vertexList[1];
+        e1.faces[0] = i;
+        edge e2 = edge();
+        e2.vertices[0] = f.vertexList[1];
+        e2.vertices[1] = f.vertexList[2];
+        e2.faces[0] = i;
+        edge e3 = edge();
+        e3.vertices[0] = f.vertexList[2];
+        e3.vertices[1] = f.vertexList[0];
+        e3.faces[0] = i;
+
+        int j;
+        bool founde1 = false, founde2 = false, founde3 = false;
+        for (j = 0; j < edgeCount; j++) {
+            edge e = edgeList[j];
+            if (e.vertices[0] == -1) break;
+            if (e == e1) {
+                founde1 = true;
+                edgeList[j].faces[1] = i;
+            } else if (e == e2) {
+                founde2 = true;
+                edgeList[j].faces[1] = i;
+            } else if (e == e3) {
+                founde2 = true;
+                edgeList[j].faces[1] = i;
+            }
+        }
+        if (!founde1) {
+            edgeList[j++] = e1;
+        }
+        if (!founde2) {
+            edgeList[j++] = e2;
+        }
+        if (!founde3) {
+            edgeList[j++] = e3;
+        }
     }
-    //TODO add all the edges to the edgeList and make sure they have both faces
+
 } 
 
 /* Desc: Renders the silhouette
@@ -296,6 +337,15 @@ void ply::findEdges(){
 void ply::renderSilhouette(){
     glPushMatrix();
     glBegin(GL_LINES);
+
+    for (int i = 0; i < edgeCount; i++) {
+        face f1 = faceList[edgeList[i].faces[0]];
+        face f2 = faceList[edgeList[i].faces[1]];
+        if (f1.dotProd  * f2.dotProd < 0) {
+            glVertex3f(vertexList[edgeList[i].vertices[0]].x, vertexList[edgeList[i].vertices[0]].y, vertexList[edgeList[i].vertices[0]].z);
+            glVertex3f(vertexList[edgeList[i].vertices[1]].x, vertexList[edgeList[i].vertices[1]].y, vertexList[edgeList[i].vertices[1]].z);
+        }
+    }
     
     //TODO Iterate through the edgeList, and if you want to draw an edge,
     //call glVertex3f once for each vertex in that edge.  
@@ -378,11 +428,15 @@ void ply::setNormal(int facenum, float x1, float y1, float z1,
 
         cx = cx / length;
         cy = cy / length;
-        cz = cz / length;       
+        cz = cz / length;
 
         faceList[facenum].normX = cx;
         faceList[facenum].normY = cy;
         faceList[facenum].normZ = cz;
-        
+
+        Vector N = Vector(cx, cy, cz);
+        Vector L = Vector(lookX, 0, lookZ);
+        faceList[facenum].dotProd = dot(N, L);
+
         glNormal3f(cx, cy, cz);
 }

@@ -148,7 +148,7 @@ void onExit()
          and then running this function when an action has occurred.
          ========================================== */
 void callback_load(int id) {
-        
+        (void) id;
         if (filenameTextField == NULL) {
                 return;
         }
