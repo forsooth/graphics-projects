@@ -1,0 +1,24 @@
+from: 
+
+http://cs.brown.edu/courses/cs125/gallery.htm
+https://vimeo.com/56387663
+https://vimeo.com/34556749
+https://vimeo.com/channels/brownanimation/84177868
+
+
+from:
+http://422.com/
+https://www.youtube.com/watch?v=8PuEK855AN4
+
+Here's the link to my capstone animation: 
+https://vimeo.com/10639790
+
+This is a classic one by one of the artists who got hired to work on The Matrix as a result: 
+https://www.youtube.com/watch?v=6c1vWnF9bS4
+
+A simple short from 1999 Siggraph: http://accad.osu.edu/researchmain/gallery/project_gallery/dont_pull_plug.html
+
+Some others: http://accad.osu.edu/researchmain/gallery/project_gallery.html?tags=Animated+Shorts
+
+Also of interest when you get to shaders, I saw this a few days ago:
+http://www.adriancourreges.com/blog/2015/03/10/deus-ex-human-revolution-graphics-study/

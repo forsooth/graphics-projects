@@ -1,0 +1,89 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage[margin=0.75in]{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\setlength{\columnsep}{1cm}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\usepackage[usenames]{color}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{light-gray}{gray}{0.45}
+\titleformat{\section}
+{\color{black}\normalfont\huge\bfseries}
+{\color{black}\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\color{light-gray}\normalfont\Large\bfseries}
+{\color{light-gray}\thesubsection}{1em}{}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{\Huge{\bf Assignment 3: Sceneview}}
+\author{Comp175: Introduction to Computer Graphics -- Spring 2015}
+\date{Algorithm due:  {\bf Wednesday March 25th} at 11:59pm\\
+Project due:  {\bf Monday March 0th} at 11:59pm}                            
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+\section{Introduction}								
+In order to visualize a complex 3-dimensional scene, thousands of tiny triangles must be drawn to the screen. It would be incredibly tedious to require the manual placement of each one of these triangles; instead, we usually define the scene in terms of the various primitives that compose it. Even better, we allow for primitives to be grouped, and then we reference those groups as user-defined primitives.
+
+In {\tt Sceneview}, you'll use an existing support library to parse an XML file containing information about the scene to be rendered, and then interface with that library to extract all of this scene information for rendering. After you've imported all of the data, you must traverse the scene graph (the data structure in which you stored the scene info) and make a list of objects to draw to the screen. Each object will have certain properties needed for rendering (color, for instance), and a transformation that will move the vertices and normals from object space into world space for the specific object. Once you've made this flattened list, you will iterate through the list, set up the appropriate state information, and render each object to the screen. You'll be making good use of your code from {\tt Shapes} and {\tt Camera} in order to accomplish these tasks.
+
+\subsection{Demo}
+As usual, we have implemented the functionality you are required to implement in this assignment.
+
+{\bf One caveat:} some scenes have primitives that have similar Z-buffer values and this causes an effect called Z-fighting. The effect causes random pixels to be rendered with the color of one primitive or another in a nondeterministic manner. Don't worry if this happens and your pixels don't exactly match the demo. As long as the primitives are in the correct place (within epsilon), then you have done it correctly.
+
+You can find a whole bunch of test XML scenefiles bundled with the support code.
+
+\section{Requirements}
+You are required to implement a program that will build a scene graph internally and then efficiently render the scene to the display using calls to OpenGL. This means that you are required to ``flatten'' the scene graph into an array-like structure (e.g fixed-length arrays or vectors, but not linked lists). As such, you will probably want to use the STL (Standard Template Library) in various places within this assignment; there are places where maps and lists will make your life much easier.
+
+As usual, there is a good chunk of existing support code for this assignment. In addition, your code for this assignment will use your {\tt Camera} and {\tt Shapes} code. If your {\tt Camera} or {\tt Shapes} code isn't working (or is leaking memory), you will need to fix it!
+
+For this assignment, you will be doing most of your work in {\tt Assignment3.cpp} and {\tt Shape.cpp/h}. However, be sure to understand how the parser works, and the internal support structure that will help you figure out how to get information out of the parser.
+
+\subsection{Support Functions in Assignment3.cpp}
+There are a few functions in Assignment3.cpp that you should utilize. One is the {\tt applyMaterial} function, the other is the {\tt setLight} function. As the names suggest, these functions help you set up the OpenGL context given information regarding the lights and the object materials.
+ 
+Recall from class that a scene graph is about hierarchical transformations, and that is its purpose. Therefore, we have made a distinction in this assignment: \emph{objects} and \emph{lights} are part of the scene graph, and the camera is not.
+
+In this assignment, you are only responsible for setting up the objects and the lights. We take care of setting up the camera for you; your implementation in {\tt Camera} will be used automatically by the support code. The only exception is that you'll need to implement a Reset function in the Camera, which will set up a default position, uvw coordinate, near-far planes, view angle, and aspect ratio.
+
+\subsection{Parsing the Scene Graph}
+As noted earlier, the Parser for the XML files is written for you. The interface that you should be aware of are: {\tt SceneParser.h/cpp} and {\tt SceneData.h}. As of the low-level XML parser files (that is, {\tt tinyxml, tinystr, tinyxmlerror, tinyxmlparser}), you should just ignore. There should be no reason for you to need to access these files directly.
+
+\subsection{Rendering the Scene}
+Your job is to fill in the methods to render the geometry of your scene using OpenGL. In particular, look for the words {\tt TODO} in the {\tt myGlutDisplay} function. You will have to traverse the data structure returned by SceneParser and render all the shapes by invoking your {\tt Shapes} code. You will also need to use {\tt glPushMatrix}, {\tt glPopMatrix}, and {\tt glLoadMatrix} to load the corresponding transformation matrices from your scene graph before rendering the geometry.
+
+\subsection{Generating a Scene}
+Lastly, as part of your assignment, you are required to create an XML file manually! Be creative! Use your imagination to come up with a complex scene entirely made up of the primitives (Cube, Sphere, Cone, and Cylinder). When you are done, put your XML file in {\tt /comp/175/pub/a3} with your name on it (e.g., RemcoChang\_Scene.xml). This directory is completely public, meaning that you should also check out this directory to render files that other students have come up with!  Note that because of the ``sharing'' aspect of this requirement, you should avoid using special shapes in your XML scene.
+
+Note that you need to submit your XML file as part of your final submission as well. In addition, in the submitted version, if you would like to make use of your special shape, do feel free to show off!
+
+\section{Final Notes}
+You will be using this code extensively for the rest of the assignments this semester. Please be careful about your design, it is important. Start early and come see us with any questions. The best way to test your {\tt Sceneview} is to make very simple scene files that isolate particular things. 
+
+\section{How to Submit}					
+Complete the algorithm portion of this assignment with your teammate. You may use a calculator or computer algebra system. All your answers should be given in simplest form. When a numerical answer is required, provide a reduced fraction (i.e. 1/3) or at least three decimal places (i.e. 0.333).  Show all work.
+
+For the project portion of this assignment, you are encouraged to discuss your strategies with your classmates. However, all team must turn in ORIGINAL WORK, and any collaboration or references outside of your team must be cited appropriately in the header of your submission.
+
+Hand in the assignment using the following commands:
+\begin{itemize}
+\item Algorithm:  \ \ \ \ \ \ {\tt provide comp175 a3-alg}
+\item Project code: \ \ \ {\tt provide comp175 a3}
+\end{itemize}
+
+\section{Extra Credit}
+Come up with a scene that blows my mind. See the chess.xml file for example. That's a pretty cool scene made up of very simple geometry. Try coming up with your own design that will get passed down to future students who take this class! 
+
+\end{document}  
