@@ -36,13 +36,13 @@ Project due:  {\bf Monday March 0th} at 11:59pm}
 %\subsection{}
 
 \begin{verbatim}
-Your Names: _____________________________
+Your Names: _____Matt_Asnes______________
 
-            _____________________________
+            _____Fury_Sheron_____________
 
-Your CS Logins: _________________________
+Your CS Logins: _____masnes01_____________
 
-                _________________________
+                _____lshero01_____________
 \end{verbatim}
 
 
@@ -56,18 +56,20 @@ decimal places (i.e. 0.333). Show all work; write your answers on this sheet. Th
 \begin{framed}
 \noindent {\bf [${{1}\over{2}}$ point each]} Suppose you want to apply a transformation matrix to some vertices. In what order should you use the following five OpenGL commands?
 \begin{verbatim}
-     ____ glEnd()
-     ____ glMatrixMode(GL_MODELVIEW)
-     ____ glBegin()
-     ____ glLoadMatrix()
-     ____ glVertex4fv()
+     5    glEnd()
+     1    glMatrixMode(GL_MODELVIEW)
+     3    glBegin()
+     2    glLoadMatrix()
+     4    glVertex4fv()
 \end{verbatim}
 \end{framed}
 
 
 \begin{framed}
 \noindent {\bf [$1 {{1}\over{2}}$ points]} Suppose your program contained a block of code which sent vertices to OpenGL, delimited by {\tt glBegin()} and {\tt glEnd()}. What would be the effect of a call to {\tt glLoadMatrix()} within this block?
-\vspace{10em}
+
+``\texttt{GL\_INVALID\_OPERATION} is generated if \texttt{glLoadMatrix} is executed between the execution of \texttt{glBegin} and the corresponding execution of \texttt{glEnd}.''
+
 \end{framed}
 
 \section{Scenefiles}
@@ -85,12 +87,10 @@ Consider the following excerpt from a scenefile.
 
 \begin{framed}
 \noindent {\bf [$1 {{1}\over{2}}$ points]}  To transform a point on the cylinder $C$ into the desired cylinder $C'$, in which order would you multiply the three transformations: translate ($T$), rotate ($R$), and scale ($S$) to achieve the desired effect?
-\begin{verbatim}
 
-
- C' = ___________________________ * C
- 
-\end{verbatim} 
+\begin{center}
+\texttt{C' = T * R * S * C}
+\end{center}
 \end{framed}
 
 \noindent In a previous question you described how to compose transformations within a single transformation block (trans block). When coding {\tt Sceneview}, you will also have to compose transformations whenever there is an object tree block contained within a trans block. Consider the following contrived excerpt from a scenefile:
@@ -112,28 +112,28 @@ Consider the following excerpt from a scenefile.
 
 \begin{framed}
 \noindent {\bf [$1 {{1}\over{2}}$ points]}  Suppose you composed the two transformations in the outer trans block, calling the result CTM1, and composed the transformations in the inner trans block, calling the result CTM2. Show the order in which you must multiply these matrices to obtain a single composite matrix with the desired effect on the sphere.
-\end{framed}
 
-\begin{framed}
-\vspace{12em}
+To transform a point on the sphere $S$ into the desired sphere $S'$, we perform the following:
+\begin{center}
+\texttt{S' = CTM2 * CTM1 * S}
+\end{center}
 \end{framed}
 
 
 \section{Parse Tree}
 Being sure of the order in which matrices must be multiplied puts you well on your way to completing {\tt Sceneview}. The other major hurdle is deciding how you will traverse the parse tree provided by {\tt SceneParser}.
 \begin{framed}
-\noindent {\bf [1 point]} In your most efficient program design, when and how many times should you traverse the original parse tree?
-\vspace{10em}
+\noindent {\bf [1 point]} In your most efficient program design, when and how many times should you traverse the original parse tree?\\ \\
+We envision that in our implementation, we will load in matrices for the transformations higher in the tree, then their children, then their children, and so on. When we apply the transformation to the first object in the scene, we pop up one level and go on to the next child. This effectively makes it a kind of depth first search where whenever we go up a level we pop a matrix and whenever we go down a level we push one. Then we should only need to traverse the tree once. 
 \end{framed}
 \begin{framed}
-\noindent {\bf [1 point]} Flattening the parse tree makes it quicker and easier to traverse when drawing the scene. What type of data structure will you use for this flattened tree?
-\vspace{10em}
+\noindent {\bf [1 point]} Flattening the parse tree makes it quicker and easier to traverse when drawing the scene. What type of data structure will you use for this flattened tree?\\ \\
+An array/vector probably.
 \end{framed}
 \begin{framed}
-\noindent {\bf [1 point]} What information will you store at each of the nodes in the flattened tree? Please give valid types and descriptions of any types you are defining yourself.
-\vspace{10em}
+\noindent {\bf [1 point]} What information will you store at each of the nodes in the flattened tree? Please give valid types and descriptions of any types you are defining yourself.\\ \\
+We want to store the matrix to be pushed (a composition of all of the transformation matrices in the order discussed above) and whether we should pop or not at this level. We also want to store any objects to be drawn after the matrix is applied.
 \end{framed}
-
 \section{How to Submit}
 
 Hand in a PDF version of your solutions using the following command:
