@@ -117,7 +117,7 @@ public:
 };
 
 //! Data for scene materials
-class SceneMaterial 
+class SceneMaterial
 {
 public:
    SceneColor cDiffuse;

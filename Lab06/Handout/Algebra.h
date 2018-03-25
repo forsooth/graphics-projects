@@ -10,9 +10,9 @@ const double EPSILON = 1e-30;
 #define DBL_MAX 1.7976931348623158e+308  //this defines the max double
 
 #define IN_RANGE(a,b)   (((a>(b-EPSILON))&&(a<(b+EPSILON)))?1:0)
-#define DEG_TO_RAD(a)	((a)*RAD)
-#define RAD_TO_DEG(a)	((a)/RAD)
-#define SQR(a)	 ((a)*(a))
+#define DEG_TO_RAD(a)	(a*RAD)
+#define RAD_TO_DEG(a)	(a/RAD)
+#define SQR(a)	 (a*a)
 
 class Point {
 public:

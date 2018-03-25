@@ -4,6 +4,8 @@
 #include <GL/glui.h>
 #include "Algebra.h"
 
+#define NormL 1.1
+
 class Shape {
 public:
 	Shape() {};
