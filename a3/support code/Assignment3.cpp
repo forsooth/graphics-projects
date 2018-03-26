@@ -10,6 +10,7 @@
 #include "Cylinder.h"
 #include "Cone.h"
 #include "Sphere.h"
+#include "Special.h"
 #include "SceneParser.h"
 #include "Camera.h"
 
@@ -32,9 +33,11 @@ float lookX = -2;
 float lookY = -2;
 float lookZ = -2;
 
+string shapes[] = {"SHAPE_CUBE", "SHAPE_CYLINDER", "SHAPE_CONE", "SHAPE_SPHERE", "SHAPE_SPECIAL1", "SHAPE_SPECIAL2", "SHAPE_SPECIAL3", "SHAPE_MESH"};
+
 /** These are GLUI control panel objects ***/
 int  main_window;
-string filenamePath = "data\\general\\robot.xml";
+string filenamePath = "data/general/robot.xml";
 GLUI_EditText* filenameTextField = NULL;
 
 
@@ -48,17 +51,21 @@ SceneParser* parser = NULL;
 Camera* camera = new Camera();
 
 typedef struct SceneOp {
-        bool pop;
+        uint pops;
         Matrix mat;
-        std::vector<> objs;
+        std::vector<ScenePrimitive *> objs;
 } SceneOp;
 
-std::vector<SceneOp> flattened;
+std::vector<SceneOp *> flattened;
 
 void setupCamera();
+void flattenTree();
+void flattenChild(SceneNode *node);
 
 void callback_load(int id) {
         char curDirName [2048];
+        (void) curDirName;
+        (void) id;
         if (filenameTextField == NULL) {
                 return;
         }
@@ -67,10 +74,11 @@ void callback_load(int id) {
         if (parser != NULL) {
                 delete parser;
         }
-        parser = new SceneParser (filenamePath);
-
+        parser = new SceneParser(filenamePath);
         bool success = parser->parse();
+
         cout << "success? " << success << endl;
+
         if (success == false) {
                 delete parser;
                 parser = NULL;
@@ -78,6 +86,7 @@ void callback_load(int id) {
         else {
                 setupCamera();
                 flattenTree();
+
         }
 }
 
@@ -165,7 +174,35 @@ void setupCamera()
 }
 
 void flattenTree() {
-        
+        SceneNode* root = parser->getRootNode();
+        flattenChild(root);
+
+}
+
+void flattenChild(SceneNode *node) {
+        SceneOp *flat_elem = new SceneOp();
+        flat_elem->mat = Matrix();
+        flat_elem->pops = 0;
+        flat_elem->objs = node->primitives;
+
+        for(uint i = 0; i < node->transformations.size(); ++i) {
+                flat_elem->mat = flat_elem->mat * trans_mat(node->transformations[i]->translate);
+        }
+
+        if (node->children.size() == 0) {
+                flat_elem->pops++;
+                flattened.push_back(flat_elem);
+                return;
+        }
+
+        flattened.push_back(flat_elem);
+
+        for (uint i = 0; i < node->children.size(); ++i) {
+                flattenChild(node->children[i]);
+                if (i == node->children.size() - 1) {
+                        flattened.back()->pops++;
+                }
+        }
 }
 
 /***************************************** setLight() *****************/
@@ -194,23 +231,30 @@ void setLight(const SceneLightData &light)
     {
         case LIGHT_POINT:
         {
-            // Convert from double[] to float[] and make sure the w coordinate is correct 
-            float position[] = { light.pos[0], light.pos[1], light.pos[2], 1 };
-            glLightfv(id, GL_POSITION, position);
-                        glEnable(id);
-            break;
+                fprintf(stderr, "Point light created.\n");
+                // Convert from double[] to float[] and make sure the w coordinate is correct 
+                float position[] = {(float)light.pos[0], (float)light.pos[1], (float)light.pos[2], 1};
+                glLightfv(id, GL_POSITION, position);
+                glEnable(id);
+                break;
         }
-
         case LIGHT_DIRECTIONAL:
         {
-            // Convert from double[] to float[] and make sure the direction vector is normalized (it isn't for a lot of scene files)
-            Vector direction = -light.dir;
-                        direction.normalize();
-            float position[] = { direction[0], direction[1], direction[2], direction[3] };
-            glLightfv(id, GL_POSITION, position);
-                        glEnable(id);
-            break;
+                fprintf(stderr, "Directional light created.\n");
+                // Convert from double[] to float[] and make sure the direction vector is normalized (it isn't for a lot of scene files)
+                Vector direction = -light.dir;
+                direction.normalize();
+                float position[] = {(float)direction[0], (float)direction[1], (float)direction[2], (float)direction[3]};
+                glLightfv(id, GL_POSITION, position);
+                glEnable(id);
+                break;
         }
+        case LIGHT_SPOT:
+                fprintf(stderr, "Spot light created.\n");
+                break;
+        case LIGHT_AREA:
+                fprintf(stderr, "Area light created.\n");
+                break;
     }
 }
 
@@ -244,11 +288,56 @@ void applyMaterial(const SceneMaterial &material)
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, &material_local.cEmissive.r);
 }
 
+void drawFlattened(bool fill) {
+        for (uint i = 0; i < flattened.size(); ++i) {
+                glMultMatrixd(flattened[i]->mat.unpack());
+                
+                for (uint j = 0; j < flattened[i]->objs.size(); j++) {
+                        PrimitiveType type = flattened[i]->objs[j]->type;
+                        if (fill == true) {
+                                SceneMaterial material = flattened[i]->objs[j]->material;
+                                applyMaterial(material);
+                        }
+                        switch(type) {
+                                case SHAPE_CUBE:
+                                        Cube().draw();
+                                        break;
+                                case SHAPE_CYLINDER:
+                                        Cylinder().draw();
+                                        break;
+                                case SHAPE_CONE:
+                                        Cone().draw();
+                                        break;
+                                case SHAPE_SPHERE:
+                                        Sphere().draw();
+                                        break;
+                                case SHAPE_SPECIAL1:
+                                        Special().draw();
+                                        break;
+                                case SHAPE_SPECIAL2:
+                                        Special().draw();
+                                        break;
+                                case SHAPE_SPECIAL3:
+                                        Special().draw();
+                                        break;
+                                default:
+                                        Cube().draw();
+                        }
+                }
+
+                glPushMatrix();
+
+                for (uint j = 0; j < flattened[i]->pops; j++) {
+                        glPopMatrix();
+                }
+        }
+}
 
 /***************************************** myGlutDisplay() *****************/
 
 void myGlutDisplay(void)
 {
+
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -256,15 +345,15 @@ void myGlutDisplay(void)
                 return;
         }
 
+        camera->Orient(Point(eyeX, eyeY, eyeZ), Vector(lookX, lookY, lookZ), Vector(0, 1, 0));
+        camera->RotateV(camRotV);
+        camera->RotateU(camRotU);
+        camera->RotateW(camRotW);
         camera->SetViewAngle(viewAngle);
         glMatrixMode(GL_PROJECTION);
         Matrix projection = camera->GetProjectionMatrix();
         glLoadMatrixd(projection.unpack());
 
-        camera->Orient(Point(eyeX, eyeY, eyeZ), Vector(lookX, lookY, lookZ), Vector(0, 1, 0));
-        camera->RotateV(camRotV);
-        camera->RotateU(camRotU);
-        camera->RotateW(camRotW);
         glMatrixMode(GL_MODELVIEW);
         glLoadMatrixd(camera->GetModelViewMatrix().unpack());
 
@@ -273,12 +362,11 @@ void myGlutDisplay(void)
                 glDisable(GL_LIGHT0 + i);
         }
 
-        SceneNode* root = parser->getRootNode();
         Matrix compositeMatrix;
 
         //drawing the axes
         glEnable(GL_COLOR_MATERIAL);
-    glDisable(GL_LIGHTING);
+        glDisable(GL_LIGHTING);
         glBegin(GL_LINES);
         glColor3f(1.0, 0.0, 0.0);
         glVertex3f(0, 0, 0); glVertex3f(1.0, 0, 0);
@@ -292,11 +380,19 @@ void myGlutDisplay(void)
         if (wireframe) {
                 glDisable(GL_POLYGON_OFFSET_FILL);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-                //TODO: draw wireframe of the scene...
-                // note that you don't need to applyMaterial, just draw the geometry
+//                drawFlattened(false);
+
+//                for (uint i = 0; i < flattened.size(); i++) {
+//                        SceneOp *op = flattened[i];
+//                        fprintf(stderr, "Num pops: %d\n", op->pops);
+//                        for (uint j = 0; j < op->objs.size(); j++) {
+//                                fprintf(stderr, "shape: %s\n", shapes[op->objs[j]->type].c_str());
+//                        }
+//                        op->mat.print();
+//                }
         }
 
-    glDisable(GL_COLOR_MATERIAL);
+        glDisable(GL_COLOR_MATERIAL);
         int numLights = parser->getNumLights();
         for (int i = 0; i < numLights; i++) {
                 SceneLightData lightData;
@@ -308,8 +404,10 @@ void myGlutDisplay(void)
         if (fillObj == 1) {
                 glEnable(GL_POLYGON_OFFSET_FILL);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                //TODO: render the scene...
-                // note that you should always applyMaterial first, then draw the geometry
+                Cube* cube = new Cube();
+                cube->draw();
+  //              drawFlattened(true);
+
         }
         glDisable(GL_LIGHTING);
         

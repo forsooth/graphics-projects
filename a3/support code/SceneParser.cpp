@@ -81,7 +81,7 @@ bool SceneParser :: getLightData(int i, SceneLightData& data)
    return true;
 }
 
-SceneNode* SceneParser :: getRootNode() 
+SceneNode* SceneParser::getRootNode()
 {
    map<std::string, SceneNode*>::iterator node = m_objects.find("root");
    if (node == m_objects.end())
@@ -90,7 +90,7 @@ SceneNode* SceneParser :: getRootNode()
 }
 
 /* this is where it all goes down... */
-bool SceneParser::parse() 
+bool SceneParser::parse()
 {
    TiXmlDocument doc(file_name.c_str());
    bool loaded = doc.LoadFile();

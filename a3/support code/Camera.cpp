@@ -27,12 +27,35 @@ Camera::~Camera() {
 
 }
 
-void Camera::Orient(Point& eye, Point& focus, Vector& up) {
+void Camera::Reset() {
+        eye = Point(2.0, 2.0, 2.0);
+        nearPlane = 0.001;
+        farPlane = 30.0;
+        depth = farPlane - nearPlane;
+
+        viewAngle = 45.0;
+        screenWidth = 500;
+        screenHeight = 500;
+        aspectRatio = 1.0;
+        
+        look = Vector(-2.0, -2.0, -2.0);
+        up = Vector(0.0, 1.0, 0.0);
+        W = -look / length(look);
+        U = cross(up, W) / length(cross(up, W));
+        V = cross(W, U);
+
+        cam_trans = Matrix();
+        cam_rot = Matrix();
+        cam_scale = Matrix();
+        unhinge = Matrix();
+}
+
+void Camera::Orient(Point eye, Point focus, Vector up) {
         look = Vector(focus - eye);
         Orient(eye, look, up);
 }
 
-void Camera::Orient(Point& eye, Vector& look, Vector& up) {
+void Camera::Orient(Point eye, Vector look, Vector up) {
         this->up = up;
         this->look = look;
         this->eye = eye;
