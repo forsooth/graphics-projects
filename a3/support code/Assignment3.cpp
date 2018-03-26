@@ -52,7 +52,7 @@ Camera* camera = new Camera();
 
 typedef struct SceneOp {
         uint pops;
-        Matrix mat;
+        std::vector<SceneTransformation *> mats;
         std::vector<ScenePrimitive *> objs;
 } SceneOp;
 
@@ -84,8 +84,8 @@ void callback_load(int id) {
                 parser = NULL;
         }
         else {
-                setupCamera();
                 flattenTree();
+                setupCamera();
 
         }
 }
@@ -174,6 +174,7 @@ void setupCamera()
 }
 
 void flattenTree() {
+        fprintf(stderr, "Generate flattened\n");
         SceneNode* root = parser->getRootNode();
         flattenChild(root);
 
@@ -181,13 +182,9 @@ void flattenTree() {
 
 void flattenChild(SceneNode *node) {
         SceneOp *flat_elem = new SceneOp();
-        flat_elem->mat = Matrix();
+        flat_elem->mats = node->transformations;
         flat_elem->pops = 0;
         flat_elem->objs = node->primitives;
-
-        for(uint i = 0; i < node->transformations.size(); ++i) {
-                flat_elem->mat = flat_elem->mat * trans_mat(node->transformations[i]->translate);
-        }
 
         if (node->children.size() == 0) {
                 flat_elem->pops++;
@@ -290,42 +287,28 @@ void applyMaterial(const SceneMaterial &material)
 
 void drawFlattened(bool fill) {
         for (uint i = 0; i < flattened.size(); ++i) {
-                glMultMatrixd(flattened[i]->mat.unpack());
+                for (uint j = 0; j < flattened[i]->mats.size(); j++) {
+                        if (flattened[i]->mats[j]->type == TRANSFORMATION_TRANSLATE) {
+                                glTranslated(flattened[i]->mats[j]->translate[0], flattened[i]->mats[j]->translate[1], flattened[i]->mats[j]->translate[2]);
+                        } else if (flattened[i]->mats[j]->type == TRANSFORMATION_ROTATE) {
+                                glRotated(flattened[i]->mats[j]->angle, flattened[i]->mats[j]->rotate[0], flattened[i]->mats[j]->rotate[1], flattened[i]->mats[j]->rotate[2]);
+                        } else if (flattened[i]->mats[j]->type == TRANSFORMATION_SCALE) {
+                                glScaled(flattened[i]->mats[j]->scale[0], flattened[i]->mats[j]->scale[1], flattened[i]->mats[j]->scale[2]);
+                        } else if (flattened[i]->mats[j]->type == TRANSFORMATION_MATRIX) {
+                                glMultMatrixd(flattened[i]->mats[j]->matrix.unpack());
+                        }
+                }
                 
+                glPushMatrix();
                 for (uint j = 0; j < flattened[i]->objs.size(); j++) {
                         PrimitiveType type = flattened[i]->objs[j]->type;
                         if (fill == true) {
                                 SceneMaterial material = flattened[i]->objs[j]->material;
                                 applyMaterial(material);
                         }
-                        switch(type) {
-                                case SHAPE_CUBE:
-                                        Cube().draw();
-                                        break;
-                                case SHAPE_CYLINDER:
-                                        Cylinder().draw();
-                                        break;
-                                case SHAPE_CONE:
-                                        Cone().draw();
-                                        break;
-                                case SHAPE_SPHERE:
-                                        Sphere().draw();
-                                        break;
-                                case SHAPE_SPECIAL1:
-                                        Special().draw();
-                                        break;
-                                case SHAPE_SPECIAL2:
-                                        Special().draw();
-                                        break;
-                                case SHAPE_SPECIAL3:
-                                        Special().draw();
-                                        break;
-                                default:
-                                        Cube().draw();
-                        }
+                        renderShape(type);
                 }
 
-                glPushMatrix();
 
                 for (uint j = 0; j < flattened[i]->pops; j++) {
                         glPopMatrix();
@@ -338,7 +321,7 @@ void drawFlattened(bool fill) {
 void myGlutDisplay(void)
 {
 
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(.9f, .9f, .9f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (parser == NULL) {
@@ -380,16 +363,7 @@ void myGlutDisplay(void)
         if (wireframe) {
                 glDisable(GL_POLYGON_OFFSET_FILL);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//                drawFlattened(false);
-
-//                for (uint i = 0; i < flattened.size(); i++) {
-//                        SceneOp *op = flattened[i];
-//                        fprintf(stderr, "Num pops: %d\n", op->pops);
-//                        for (uint j = 0; j < op->objs.size(); j++) {
-//                                fprintf(stderr, "shape: %s\n", shapes[op->objs[j]->type].c_str());
-//                        }
-//                        op->mat.print();
-//                }
+                drawFlattened(false);
         }
 
         glDisable(GL_COLOR_MATERIAL);
@@ -404,11 +378,9 @@ void myGlutDisplay(void)
         if (fillObj == 1) {
                 glEnable(GL_POLYGON_OFFSET_FILL);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-                Cube* cube = new Cube();
-                cube->draw();
-  //              drawFlattened(true);
-
+                drawFlattened(true);
         }
+
         glDisable(GL_LIGHTING);
         
         camera->RotateV(-camRotV);
