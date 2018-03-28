@@ -33,7 +33,7 @@ SceneParser::~SceneParser()
    }
 
    /* Delete all Scene Nodes */
-   for (unsigned int node = 0; node < m_nodes.size(); node++) {           
+   for (unsigned int node = 0; node < m_nodes.size(); node++) {
       for (size_t i = 0; i < (m_nodes[node])->transformations.size(); i++) {
          delete (m_nodes[node])->transformations[i];
       }

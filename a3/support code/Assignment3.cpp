@@ -33,11 +33,13 @@ float lookX = -2;
 float lookY = -2;
 float lookZ = -2;
 
+bool renormalize = false;
+
 string shapes[] = {"SHAPE_CUBE", "SHAPE_CYLINDER", "SHAPE_CONE", "SHAPE_SPHERE", "SHAPE_SPECIAL1", "SHAPE_SPECIAL2", "SHAPE_SPECIAL3", "SHAPE_MESH"};
 
 /** These are GLUI control panel objects ***/
 int  main_window;
-string filenamePath = "data/general/robot.xml";
+string filenamePath = "dragon.xml";
 GLUI_EditText* filenameTextField = NULL;
 
 
@@ -52,7 +54,7 @@ Camera* camera = new Camera();
 
 typedef struct SceneOp {
         uint pops;
-        std::vector<SceneTransformation *> mats;
+        Matrix mat;
         std::vector<ScenePrimitive *> objs;
 } SceneOp;
 
@@ -61,6 +63,7 @@ std::vector<SceneOp *> flattened;
 void setupCamera();
 void flattenTree();
 void flattenChild(SceneNode *node);
+void drawFlattened(bool fill);
 
 void callback_load(int id) {
         char curDirName [2048];
@@ -84,8 +87,8 @@ void callback_load(int id) {
                 parser = NULL;
         }
         else {
-                flattenTree();
                 setupCamera();
+                flattenTree();
 
         }
 }
@@ -121,8 +124,9 @@ void myGlutIdle(void)
         /* According to the GLUT specification, the current window is
         undefined during an idle callback.  So we need to explicitly change
         it if necessary */
-        if (glutGetWindow() != main_window)
+        if (glutGetWindow() != main_window) {
                 glutSetWindow(main_window);
+        }
 
         glutPostRedisplay();
 }
@@ -173,35 +177,6 @@ void setupCamera()
         GLUI_Master.sync_live_all();
 }
 
-void flattenTree() {
-        fprintf(stderr, "Generate flattened\n");
-        SceneNode* root = parser->getRootNode();
-        flattenChild(root);
-
-}
-
-void flattenChild(SceneNode *node) {
-        SceneOp *flat_elem = new SceneOp();
-        flat_elem->mats = node->transformations;
-        flat_elem->pops = 0;
-        flat_elem->objs = node->primitives;
-
-        if (node->children.size() == 0) {
-                flat_elem->pops++;
-                flattened.push_back(flat_elem);
-                return;
-        }
-
-        flattened.push_back(flat_elem);
-
-        for (uint i = 0; i < node->children.size(); ++i) {
-                flattenChild(node->children[i]);
-                if (i == node->children.size() - 1) {
-                        flattened.back()->pops++;
-                }
-        }
-}
-
 /***************************************** setLight() *****************/
 void setLight(const SceneLightData &light)
 {
@@ -228,7 +203,7 @@ void setLight(const SceneLightData &light)
     {
         case LIGHT_POINT:
         {
-                fprintf(stderr, "Point light created.\n");
+                //fprintf(stderr, "Point light created.\n");
                 // Convert from double[] to float[] and make sure the w coordinate is correct 
                 float position[] = {(float)light.pos[0], (float)light.pos[1], (float)light.pos[2], 1};
                 glLightfv(id, GL_POSITION, position);
@@ -237,7 +212,7 @@ void setLight(const SceneLightData &light)
         }
         case LIGHT_DIRECTIONAL:
         {
-                fprintf(stderr, "Directional light created.\n");
+                //fprintf(stderr, "Directional light created.\n");
                 // Convert from double[] to float[] and make sure the direction vector is normalized (it isn't for a lot of scene files)
                 Vector direction = -light.dir;
                 direction.normalize();
@@ -247,10 +222,10 @@ void setLight(const SceneLightData &light)
                 break;
         }
         case LIGHT_SPOT:
-                fprintf(stderr, "Spot light created.\n");
+                //fprintf(stderr, "Spot light created.\n");
                 break;
         case LIGHT_AREA:
-                fprintf(stderr, "Area light created.\n");
+                //fprintf(stderr, "Area light created.\n");
                 break;
     }
 }
@@ -285,21 +260,55 @@ void applyMaterial(const SceneMaterial &material)
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, &material_local.cEmissive.r);
 }
 
-void drawFlattened(bool fill) {
-        for (uint i = 0; i < flattened.size(); ++i) {
-                for (uint j = 0; j < flattened[i]->mats.size(); j++) {
-                        if (flattened[i]->mats[j]->type == TRANSFORMATION_TRANSLATE) {
-                                glTranslated(flattened[i]->mats[j]->translate[0], flattened[i]->mats[j]->translate[1], flattened[i]->mats[j]->translate[2]);
-                        } else if (flattened[i]->mats[j]->type == TRANSFORMATION_ROTATE) {
-                                glRotated(flattened[i]->mats[j]->angle, flattened[i]->mats[j]->rotate[0], flattened[i]->mats[j]->rotate[1], flattened[i]->mats[j]->rotate[2]);
-                        } else if (flattened[i]->mats[j]->type == TRANSFORMATION_SCALE) {
-                                glScaled(flattened[i]->mats[j]->scale[0], flattened[i]->mats[j]->scale[1], flattened[i]->mats[j]->scale[2]);
-                        } else if (flattened[i]->mats[j]->type == TRANSFORMATION_MATRIX) {
-                                glMultMatrixd(flattened[i]->mats[j]->matrix.unpack());
-                        }
+
+/**********************************************************/
+void flattenTree() {
+        flattened.clear();
+        fprintf(stderr, "Generated flattened scene tree\n");
+        SceneNode* root = parser->getRootNode();
+        flattenChild(root);
+}
+
+void flattenChild(SceneNode *node) {
+        SceneOp *flat_elem = new SceneOp();
+        flat_elem->objs = node->primitives;
+        flat_elem->pops = 0;
+        flat_elem->mat = Matrix();
+
+        for (uint j = 0; j < node->transformations.size(); j++) {
+                if (node->transformations[j]->type == TRANSFORMATION_TRANSLATE) {
+                        flat_elem->mat = flat_elem->mat * trans_mat(node->transformations[j]->translate);
+                } else if (node->transformations[j]->type == TRANSFORMATION_ROTATE) {
+                        flat_elem->mat = flat_elem->mat * rot_mat(node->transformations[j]->rotate, node->transformations[j]->angle);
+                } else if (node->transformations[j]->type == TRANSFORMATION_SCALE) {
+                        flat_elem->mat = flat_elem->mat * scale_mat(node->transformations[j]->scale);
+                } else if (node->transformations[j]->type == TRANSFORMATION_MATRIX) {
+                        flat_elem->mat = flat_elem->mat * node->transformations[j]->matrix;
                 }
-                
+        }
+
+        if (node->children.size() == 0) {
+                flat_elem->pops++;
+                flattened.push_back(flat_elem);
+                return;
+        }
+
+        flattened.push_back(flat_elem);
+
+        for (uint i = 0; i < node->children.size(); i++) {
+                flattenChild(node->children[i]);
+                if (i == node->children.size() - 1) {
+                        flattened[flattened.size() - 1]->pops++;
+                }
+        }
+}
+
+void drawFlattened(bool fill) {
+
+        for (uint i = 0; i < flattened.size(); i++) {
                 glPushMatrix();
+                glMultMatrixd(flattened[i]->mat.unpack());
+
                 for (uint j = 0; j < flattened[i]->objs.size(); j++) {
                         PrimitiveType type = flattened[i]->objs[j]->type;
                         if (fill == true) {
@@ -309,11 +318,11 @@ void drawFlattened(bool fill) {
                         renderShape(type);
                 }
 
-
                 for (uint j = 0; j < flattened[i]->pops; j++) {
                         glPopMatrix();
                 }
         }
+
 }
 
 /***************************************** myGlutDisplay() *****************/
@@ -323,6 +332,8 @@ void myGlutDisplay(void)
 
         glClearColor(.9f, .9f, .9f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
+        glPushMatrix();
 
         if (parser == NULL) {
                 return;
@@ -360,10 +371,12 @@ void myGlutDisplay(void)
         glEnd();
 
         glColor3f(1.0, 0.0, 0.0);
-        if (wireframe) {
+        if (wireframe && parser != NULL) {
                 glDisable(GL_POLYGON_OFFSET_FILL);
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                glPushMatrix();
                 drawFlattened(false);
+                glPopMatrix();
         }
 
         glDisable(GL_COLOR_MATERIAL);
@@ -375,12 +388,17 @@ void myGlutDisplay(void)
         }
 
         glEnable(GL_LIGHTING);
-        if (fillObj == 1) {
+        if (fillObj == 1 && parser != NULL) {
                 glEnable(GL_POLYGON_OFFSET_FILL);
+                if (renormalize) {
+                        glEnable(GL_NORMALIZE);
+                }
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                glPushMatrix();
                 drawFlattened(true);
+                glPopMatrix();
         }
-
+        glPopMatrix();
         glDisable(GL_LIGHTING);
         
         camera->RotateV(-camRotV);
@@ -407,6 +425,11 @@ void onExit()
 int main(int argc, char* argv[])
 {
         atexit(onExit);
+
+        if (argc > 1) {
+                renormalize = true;
+                fprintf(stderr, "Enabling renormalization\n");
+        }
 
         /****************************************/
         /*   Initialize GLUT and create window  */

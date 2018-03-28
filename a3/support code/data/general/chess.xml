@@ -1,8 +1,8 @@
 <scenefile>
     <globaldata>
-	<diffusecoeff v="0.5"/>
-	<specularcoeff v="0.5"/>
-	<ambientcoeff v="0.5"/>
+	<diffusecoeff v="1"/>
+	<specularcoeff v="1"/>
+	<ambientcoeff v="1"/>
     </globaldata>
 
     <cameradata>
@@ -16,42 +16,42 @@
 	<id v="0"/>
 	<position x="8.5" y="2" z="8.5"/>
 	<color r="1" g="1" b="1"/>
-	<function v1=".1" v2="1" v3="0"/>
+	<function v1="1" v2="0.2" v3="0"/>
     </lightdata>
 
     <lightdata>
 	<id v="1"/>
 	<position x="3" y="3" z="3"/>
 	<color r="1" g="1" b="1"/>
-	<function v1="0.1" v2="1" v3="0"/>
+	<function v1="1" v2="0.2" v3="0"/>
     </lightdata>
 
     <lightdata>
 	<id v="2"/>
 	<position x="-3" y="4" z="-3"/>
 	<color r="1" g="1" b="1"/>
-	<function v1=".1" v2="1" v3="0"/>
+	<function v1="1" v2="0.2" v3="0"/>
     </lightdata>
 
     <lightdata>
 	<id v="3"/>
 	<position x="-3" y="2" z="3"/>
 	<color r="1" g="1" b="1"/>
-	<function v1=".1" v2="1" v3="0"/>
+	<function v1="1" v2="0.2" v3="0"/>
     </lightdata>
 
     <lightdata>
 	<id v="4"/>
 	<position x="8" y="3" z="1"/>
 	<color r="1" g="1" b="1"/>
-	<function v1=".1" v2="1" v3="0"/>
+	<function v1="1" v2="0.2" v3="0"/>
     </lightdata>
 
     <lightdata>
 	<id v="5"/>
 	<position x="6" y="2" z="6"/>
 	<color r="1" g="1" b="1"/>
-	<function v1=".1" v2="1" v3="0"/>
+	<function v1="1" v2="0.2" v3="0"/>
     </lightdata>
 
     <object type="tree" name="root">
