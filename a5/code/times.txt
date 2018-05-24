@@ -1,0 +1,58 @@
+All times calculated with shadows on, and reflection depth at 0
+Trials performed on chess.xml at 500x500
+
+demo 124.43
+
+O0 425.062
+8-threads 133.057
+precompute-matrix-inverses 49.6269
+kd-tree 18.203
+
+O1 78.4717
++8-threads 16.894
+precompute-matrix-inverses 8.96711
+kd-tree 2.43703
+
+O2 66.8464
++8-threads 19.3479
+precompute-matrix-inverses 5.49034
+kd-tree 2.03977
+
+03 67.1973
++8-threads 20.198
+precompute-matrix-inverses 5.57525
+kd-tree 1.9845
+
+Ofast 67.3628
+8-threads 19.8321
+precompute-matrix-inverses 5.60927
+kd-tree 2.01007
+
+all-compiler-flags 58.2678
+8-threads 17.3697
+precompute-matrix-inverses 4.75877
+kd-tree 1.85578
+12-threads 1.61389
+-shadows 0.367288
+
+O2-with-float-alg 51.8195
++8-threads 14.9723
+precompute-matrix-inverses 2.87071
+kd-tree 1.22344
+
+O3-with-float-alg 53.5209
++8-threads 14.7684
+precompute-matrix-inverses 2.9434
+kd-tree 1.2754
+
+Ofast 50.7561
+8-threads 13.9729
+precompute-matrix-inverses 2.42539
+kd-tree 1.13385
+
+all-compiler-flags 48.3428
+8-threads 14.2217
+precompute-matrix-inverses 2.36531
+kd-tree 0.993602
+12-threads 0.933512
+-shadows 0.204681

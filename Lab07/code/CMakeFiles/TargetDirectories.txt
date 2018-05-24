@@ -1,0 +1,3 @@
+/Users/main/Desktop/graphics/repo/Lab07/code/CMakeFiles/rebuild_cache.dir
+/Users/main/Desktop/graphics/repo/Lab07/code/CMakeFiles/edit_cache.dir
+/Users/main/Desktop/graphics/repo/Lab07/code/CMakeFiles/lab7.dir

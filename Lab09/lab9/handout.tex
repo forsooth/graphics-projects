@@ -1,0 +1,32 @@
+\documentclass{article}
+\begin{document}
+\begin{centering}
+Lab 09: Normal Mapping and WebGL\\
+April 23rd, 2018\\
+
+\section{Launch a webserver}
+You can launch a webserver from this directory with `python -m SimpleHTTPServer` and then navigating to `localhost:8000`\\
+\section{Editing the handout code}
+All the code you will edit is in `app.js`\\
+Right now it simply loads images brick.png and bump.png, makes a rectangle, and then draws brick.png on the rectangle.\\
+\section{Your Job}
+\begin{itemize}
+\item load the bump.png image into the fragment shader
+\item load a uniform which resembles the point light into the fragment shader
+\item calculate the color based on the bump map value (rgba) for that pixel and the light position
+\end{itemize}
+\section{Bonus}
+\begin{itemize}
+  \item let interactivity change the position of the light
+  \item (see http://www.cs.tufts.edu/comp/175/shaderdemo/index.html for interactivity)
+  \item "green screen" the texture with another texture, by replacing the pixels colored like the grout with colors from psychedelic.png
+\end{itemize}
+\section{Resources}
+\begin{itemize}
+  \item https://webglfundamentals.org/webgl/lessons/webgl-fundamentals.html
+  \item https://webglfundamentals.org/webgl/lessons/webgl-shaders-and-glsl.html
+  \item https://webglfundamentals.org/webgl/lessons/webgl-3d-textures.html
+  \item https://webglfundamentals.org/webgl/lessons/webgl-data-textures.html
+\end{itemize}
+\end{centering}
+\end{document}
